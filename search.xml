@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>hello_hexo</title>
+    <url>/2025/02/25/hello-hexo/</url>
+    <content><![CDATA[<p>啦啦啦啦啦</p>
+<h2 id="这是一个测试文档"><a href="#这是一个测试文档" class="headerlink" title="这是一个测试文档"></a>这是一个测试文档</h2>]]></content>
+  </entry>
+  <entry>
     <title>Homework</title>
     <url>/2025/02/25/about/</url>
     <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
