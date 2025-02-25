@@ -3,11 +3,11 @@
   <title>Hubert Blog</title>
   <icon>https://www.gravatar.com/avatar/d6bfee4ef3c47c3498a5c132faa12fd9</icon>
   <subtitle>记录生活，分享技术</subtitle>
-  <link href="https://hubert-hwk.github.io/project/atom.xml" rel="self"/>
+  <link href="https://hubert-hwk.github.io/atom.xml" rel="self"/>
   
-  <link href="https://hubert-hwk.github.io/project/"/>
+  <link href="https://hubert-hwk.github.io/"/>
   <updated>2025-02-25T03:13:40.203Z</updated>
-  <id>https://hubert-hwk.github.io/project/</id>
+  <id>https://hubert-hwk.github.io/</id>
   
   <author>
     <name>Hwk</name>
@@ -18,8 +18,8 @@
   
   <entry>
     <title>Homework</title>
-    <link href="https://hubert-hwk.github.io/project/2025/02/25/about/"/>
-    <id>https://hubert-hwk.github.io/project/2025/02/25/about/</id>
+    <link href="https://hubert-hwk.github.io/2025/02/25/about/"/>
+    <id>https://hubert-hwk.github.io/2025/02/25/about/</id>
     <published>2025-02-25T03:12:32.414Z</published>
     <updated>2025-02-25T03:13:40.203Z</updated>
     
@@ -39,8 +39,8 @@
   
   <entry>
     <title>Hello World</title>
-    <link href="https://hubert-hwk.github.io/project/2025/02/24/hello-world/"/>
-    <id>https://hubert-hwk.github.io/project/2025/02/24/hello-world/</id>
+    <link href="https://hubert-hwk.github.io/2025/02/24/hello-world/"/>
+    <id>https://hubert-hwk.github.io/2025/02/24/hello-world/</id>
     <published>2025-02-24T12:36:32.651Z</published>
     <updated>2025-02-24T12:36:32.651Z</updated>
     
