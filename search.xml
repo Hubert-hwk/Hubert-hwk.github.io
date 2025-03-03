@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>about</title>
+    <url>/2025/03/03/about-1/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>hello_hexo</title>
     <url>/2025/02/25/hello-hexo/</url>
     <content><![CDATA[<p>啦啦啦啦啦</p>
@@ -9,11 +14,6 @@
       <tags>
         <tag>test</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>关于我</title>
-    <url>/2025/02/25/about/</url>
-    <content><![CDATA[<h2 id="自我介绍"><a href="#自我介绍" class="headerlink" title="自我介绍"></a>自我介绍</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3>]]></content>
   </entry>
   <entry>
     <title>Hello World</title>
