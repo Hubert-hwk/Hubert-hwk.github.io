@@ -2,11 +2,11 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>Hubert Blog</title>
   <icon>https://www.gravatar.com/avatar/d6bfee4ef3c47c3498a5c132faa12fd9</icon>
-  <subtitle>记录生活，分享技术</subtitle>
+  <subtitle>记录 AI 工程、自动化与个人成长</subtitle>
   <link href="https://hubert-hwk.github.io/atom.xml" rel="self"/>
   
   <link href="https://hubert-hwk.github.io/"/>
-  <updated>2025-03-03T07:18:11.417Z</updated>
+  <updated>2026-08-02T00:00:00.000Z</updated>
   <id>https://hubert-hwk.github.io/</id>
   
   <author>
@@ -15,6 +15,15 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+
+  <entry>
+    <title>从兴趣代码到 AI 工程：我的 GitHub 近况</title>
+    <link href="https://hubert-hwk.github.io/2026/08/02/github-project-update/"/>
+    <id>https://hubert-hwk.github.io/2026/08/02/github-project-update/</id>
+    <published>2026-08-02T00:00:00.000Z</published>
+    <updated>2026-08-02T00:00:00.000Z</updated>
+    <summary type="html">记录 Hubert 2026 年 GitHub 项目近况：HealthFlow、浏览器自动化与 AI 工程实践。</summary>
+  </entry>
   
   <entry>
     <title>about</title>

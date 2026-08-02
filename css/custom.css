@@ -37,3 +37,117 @@
     transform: translateX(0);
   }
 }
+
+.github-showcase {
+  margin: 5rem 0 4rem;
+  padding: 3rem;
+  border: 1px solid rgba(120, 120, 120, 0.18);
+  border-radius: 1.6rem;
+  background: linear-gradient(135deg, rgba(248, 250, 252, 0.96), rgba(239, 246, 255, 0.86));
+  box-shadow: 0 1.2rem 3rem rgba(30, 41, 59, 0.08);
+}
+.github-showcase__eyebrow {
+  margin: 0 0 0.8rem;
+  color: #64748b;
+  font-size: 1.1rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.github-showcase h2 {
+  margin: 0 0 1rem;
+  color: #1e293b;
+  font-size: 2.6rem;
+}
+.github-showcase__intro {
+  max-width: 66rem;
+  margin-bottom: 2rem;
+  color: #475569;
+  font-size: 1.5rem;
+  line-height: 1.8;
+}
+.github-showcase__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-bottom: 2.2rem;
+}
+.github-showcase__meta span {
+  padding: 0.45rem 0.9rem;
+  border: 1px solid rgba(100, 116, 139, 0.2);
+  border-radius: 999px;
+  color: #475569;
+  font-size: 1.2rem;
+  background: rgba(255, 255, 255, 0.66);
+}
+.github-showcase__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.2rem;
+}
+.github-project {
+  display: flex;
+  min-height: 15rem;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.6rem;
+  border: 1px solid rgba(148, 163, 184, 0.24);
+  border-radius: 1.1rem;
+  background: rgba(255, 255, 255, 0.76);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.github-project:hover {
+  transform: translateY(-0.3rem);
+  box-shadow: 0 0.8rem 1.8rem rgba(30, 41, 59, 0.1);
+}
+.github-project h3 {
+  margin: 0 0 0.7rem;
+  color: #1e293b;
+  font-size: 1.8rem;
+}
+.github-project p {
+  margin: 0;
+  color: #64748b;
+  font-size: 1.3rem;
+  line-height: 1.7;
+}
+.github-project__stack {
+  display: block;
+  margin-top: 1.2rem;
+  color: #2563eb;
+  font-size: 1.15rem;
+}
+.github-project__link {
+  display: inline-block;
+  margin-top: 1.2rem;
+  color: #2563eb;
+  font-size: 1.25rem;
+}
+.github-project__link:hover {
+  color: #1d4ed8;
+}
+.github-showcase__more {
+  display: inline-block;
+  margin-top: 2rem;
+  color: #334155;
+  font-size: 1.3rem;
+}
+.github-showcase__more:hover {
+  color: #2563eb;
+}
+.project-note {
+  padding: 1.2rem 1.5rem;
+  border-left: 0.3rem solid #60a5fa;
+  color: #475569;
+  background: #f8fafc;
+}
+@media (max-width: 768px) {
+  .github-showcase {
+    padding: 2rem;
+  }
+  .github-showcase h2 {
+    font-size: 2.1rem;
+  }
+  .github-showcase__grid {
+    grid-template-columns: 1fr;
+  }
+}

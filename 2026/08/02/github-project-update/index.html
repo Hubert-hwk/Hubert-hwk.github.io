@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-hans">
+<head>
+  <meta charset="utf-8" />
+  <meta name="description" content="记录 Hubert 2026 年 GitHub 项目近况：HealthFlow、浏览器自动化与 AI 工程实践。" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>从兴趣代码到 AI 工程：我的 GitHub 近况 | Hubert Blog</title>
+  <link rel="shortcut icon" href="/favicon.ico" />
+  <link rel="stylesheet" href="/dist/main.css" />
+  <link rel="stylesheet" href="/css/fonts/remixicon.css" />
+  <link rel="stylesheet" href="/css/custom.css" />
+</head>
+<body>
+  <div id="app">
+    <main class="content on">
+      <section class="outer">
+        <article class="article article-type-post" itemscope itemprop="blogPost">
+          <div class="article-inner">
+            <header class="article-header">
+              <h1 class="article-title sea-center" style="border-left:0" itemprop="name">从兴趣代码到 AI 工程：我的 GitHub 近况</h1>
+              <div class="article-meta">
+                <time datetime="2026-08-02T00:00:00.000Z" itemprop="datePublished">2026-08-02</time>
+              </div>
+            </header>
+            <div class="article-entry" itemprop="articleBody">
+              <p>上一次更新博客是在 2025 年 3 月。那时这里还是一个刚搭好的 Hexo 首页；一年之后，我的 GitHub 已经留下了几条更清晰的技术线索：AI 应用、Agent 工程、证据检索，以及把重复操作交给浏览器自动完成。</p>
+              <h2 id="这次更新写什么"><a href="#这次更新写什么" class="headerlink" title="这次更新写什么"></a>这次更新写什么</h2>
+              <p>这篇文章不做仓库清单，而是挑几个能代表当前方向的项目，说明我最近在解决什么问题，以及我希望把它们继续做成什么样。</p>
+              <h2 id="healthflow：让医疗辅助流程可审计"><a href="#healthflow：让医疗辅助流程可审计" class="headerlink" title="HealthFlow：让医疗辅助流程可审计"></a>HealthFlow：让医疗辅助流程可审计</h2>
+              <p><a href="https://github.com/Hubert-hwk/Health-Flow" target="_blank" rel="noopener">HealthFlow</a> 是目前最完整的一条主线。它面向体检报告和医疗单据，尝试把文档理解、结构化指标、动态分诊、证据检索、专科 Agent 和安全校验串成一个工程闭环。</p>
+              <p>项目里我特别在意三件事：指标要保留页码和坐标，回答要带来源证据，模型输出之后还要有独立的安全护栏。当前 Python 版本使用 FastAPI，并预留了 Milvus 稠密检索和 Neo4j GraphRAG 的组合；没有外部服务时也会明确降级，而不是伪造检索结果。</p>
+              <p class="project-note">边界也必须写清楚：HealthFlow 是信息整理和健康辅助建议的工程原型，不替代医生诊断、处方或具体用药建议。</p>
+              <h2 id="duckcoding：把重复操作交给浏览器"><a href="#duckcoding：把重复操作交给浏览器" class="headerlink" title="DuckCoding：把重复操作交给浏览器"></a>DuckCoding：把重复操作交给浏览器</h2>
+              <p><a href="https://github.com/Hubert-hwk/duckcoding-daily-checkin" target="_blank" rel="noopener">DuckCoding daily check-in</a> 是一条更轻量但很实用的方向：使用 Playwright Core 连接本机 Edge 或 Chrome，复用浏览器登录态完成每日签到，再交给 Windows 计划任务定时执行。</p>
+              <p>这个项目让我重新确认，自动化工具不一定要复杂。把登录、运行、失败截图、日志和敏感目录排除这些边界处理好，一个几十行到几百行的脚本也可以变成可靠的日常基础设施。</p>
+              <h2 id="专业场景是下一步"><a href="#专业场景是下一步" class="headerlink" title="专业场景是下一步"></a>专业场景是下一步</h2>
+              <p><a href="https://github.com/Hubert-hwk/Contract-Risk-Review-Assistant" target="_blank" rel="noopener">Contract Risk Review Assistant</a> 代表了我对专业场景 AI 的另一种兴趣：如何把模型能力放进合同风险审查这类需要谨慎、可解释和可追溯的工作流里。</p>
+              <p>这类项目的难点不只是“能不能生成答案”，还包括风险分级、证据定位、人工复核和责任边界。它也会反过来推动我继续完善 HealthFlow 里的安全与审计思路。</p>
+              <h2 id="接下来"><a href="#接下来" class="headerlink" title="接下来"></a>接下来</h2>
+              <ul>
+                <li>继续把 HealthFlow 的数据契约、评测口径和部署说明补齐，让每个模块都能独立验证。</li>
+                <li>为自动化脚本增加更稳定的选择器、失败恢复和可观测性。</li>
+                <li>把项目中的取舍和限制持续写回博客，少一些“完成了”的口号，多一些可以复用的过程。</li>
+              </ul>
+              <p>代码会继续变化，博客也应该跟着变化。如果你想从项目本身开始，欢迎访问我的 <a href="https://github.com/Hubert-hwk" target="_blank" rel="noopener">GitHub 主页</a>。</p>
+            </div>
+            <footer class="article-footer">
+              <a href="/">← 返回首页</a>
+            </footer>
+          </div>
+        </article>
+      </section>
+      <footer class="footer">
+        <div class="outer"><ul><li>Copyrights &copy; 2024-2026 <i class="ri-heart-fill heart_icon"></i> Hwk</li></ul></div>
+      </footer>
+    </main>
+    <aside class="sidebar on">
+      <nav class="navbar">
+        <div class="logo"><a href="/"><img src="/images/ayer-side.svg" alt="Hubert Blog"></a></div>
+        <ul class="nav nav-main">
+          <li class="nav-item"><a class="nav-item-link" href="/">首页</a></li>
+          <li class="nav-item"><a class="nav-item-link" href="/archives">归档</a></li>
+          <li class="nav-item"><a class="nav-item-link" href="/about/hwk.html">关于我</a></li>
+          <li class="nav-item"><a class="nav-item-link" href="https://github.com/Hubert-hwk" target="_blank" rel="noopener">GitHub</a></li>
+        </ul>
+      </nav>
+    </aside>
+  </div>
+</body>
+</html>
