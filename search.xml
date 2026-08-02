@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>从兴趣代码到 AI 工程：我的 GitHub 近况</title>
+    <url>/2026/08/02/github-project-update/</url>
+    <content><![CDATA[<p>记录 Hubert 2026 年 GitHub 项目近况：HealthFlow、浏览器自动化与 AI 工程实践。</p>
+<h2>HealthFlow：让医疗辅助流程可审计</h2>
+<p>把文档理解、动态分诊、证据检索、专科 Agent 和安全校验串成工程闭环。</p>
+<h2>DuckCoding：把重复操作交给浏览器</h2>
+<p>使用 Playwright Core 连接本机浏览器，复用登录态完成每日签到。</p>
+]]></content>
+  </entry>
+  <entry>
     <title>about</title>
     <url>/2025/03/03/about-1/</url>
     <content><![CDATA[]]></content>
