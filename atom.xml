@@ -6,7 +6,7 @@
   <link href="https://hubert-hwk.github.io/atom.xml" rel="self"/>
   
   <link href="https://hubert-hwk.github.io/"/>
-  <updated>2026-08-02T00:00:00.000Z</updated>
+  <updated>2026-08-14T00:00:00.000Z</updated>
   <id>https://hubert-hwk.github.io/</id>
   
   <author>
@@ -16,6 +16,15 @@
   
   <generator uri="https://hexo.io/">Hexo</generator>
 
+  <entry>
+    <title>我把 Agent 自进化飞轮拆成了四件事：评测、记忆、落地、控制</title>
+    <link href="https://hubert-hwk.github.io/2026/08/14/agent-self-evolution-flywheel/"/>
+    <id>https://hubert-hwk.github.io/2026/08/14/agent-self-evolution-flywheel/</id>
+    <published>2026-08-14T00:00:00.000Z</published>
+    <updated>2026-08-14T00:00:00.000Z</updated>
+    <summary type="html">从「能跑」到「会进化」——把 Agent 自进化的完整工程闭环拆解为信号、积累、落地、控制四个齿轮，并给出从零到一的落地路线。</summary>
+  </entry>
+  
   <entry>
     <title>从兴趣代码到 AI 工程：我的 GitHub 近况</title>
     <link href="https://hubert-hwk.github.io/2026/08/02/github-project-update/"/>
