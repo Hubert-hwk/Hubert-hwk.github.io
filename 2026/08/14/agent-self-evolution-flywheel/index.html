@@ -220,29 +220,8 @@
             </div>
           </article>
         </div>
-      </section>
-      <footer class="footer">
-        <div class="outer"><ul><li>Copyrights &copy; 2024-2026 <i class="ri-heart-fill heart_icon"></i> Hwk</li></ul></div>
-      </footer>
-    </main>
-    <aside class="sidebar on">
-      <button class="navbar-toggle"></button>
-      <nav class="navbar">
-        <div class="logo"><a href="/"><img src="/images/ayer-side.svg" alt="Hubert Blog"></a></div>
-        <ul class="nav nav-main">
-          <li class="nav-item"><a class="nav-item-link" href="/">首页</a></li>
-          <li class="nav-item"><a class="nav-item-link" href="/archives">归档</a></li>
-          <li class="nav-item"><a class="nav-item-link" href="/about/hwk.html">关于我</a></li>
-          <li class="nav-item"><a class="nav-item-link" href="https://github.com/Hubert-hwk" target="_blank" rel="noopener">GitHub</a></li>
-        </ul>
-        <ul class="nav nav-main" style="margin-top:1.6rem;border-top:1px solid #eef1f6;padding-top:1rem">
-          <li class="nav-item"><span class="post-dark" id="postDark" title="切换深浅色模式"><i class="ri-moon-line"></i></span></li>
-        </ul>
-      </nav>
-    </aside>
-  </div>
-  <button class="post-toc-fab" id="postTocFab" aria-label="目录" title="展开 / 收起目录"><i class="ri-list-unordered"></i></button>
   <aside class="post-toc" id="postTocPanel" aria-label="文章目录">
+    <div class="post-toc__inner">
     <p class="post-toc__title">本文目录 <button class="post-toc__close" id="postTocClose" aria-label="关闭目录"><i class="ri-close-line"></i></button></p>
     <ol>
       <li class="lvl-2"><a data-target="先对齐：自进化改的到底是什么" href="#先对齐：自进化改的到底是什么">先对齐：自进化改的到底是什么？</a></li>
@@ -271,7 +250,31 @@
       <li class="lvl-2"><a data-target="从零到一：四阶段落地路线" href="#从零到一：四阶段落地路线">从零到一：四阶段落地路线</a></li>
       <li class="lvl-2"><a data-target="最后：三条原则收束" href="#最后：三条原则收束">最后：三条原则收束</a></li>
     </ol>
+    </div>
   </aside>
+      </section>
+      <footer class="footer">
+        <div class="outer"><ul><li>Copyrights &copy; 2024-2026 <i class="ri-heart-fill heart_icon"></i> Hwk</li></ul></div>
+      </footer>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+      <nav class="navbar">
+        <div class="logo"><a href="/"><img src="/images/ayer-side.svg" alt="Hubert Blog"></a></div>
+        <ul class="nav nav-main">
+          <li class="nav-item"><a class="nav-item-link" href="/">首页</a></li>
+          <li class="nav-item"><a class="nav-item-link" href="/archives">归档</a></li>
+          <li class="nav-item"><a class="nav-item-link" href="/about/hwk.html">关于我</a></li>
+          <li class="nav-item"><a class="nav-item-link" href="https://github.com/Hubert-hwk" target="_blank" rel="noopener">GitHub</a></li>
+        </ul>
+        <ul class="nav nav-main" style="margin-top:1.6rem;border-top:1px solid #eef1f6;padding-top:1rem">
+          <li class="nav-item"><span class="post-dark" id="postDark" title="切换深浅色模式"><i class="ri-moon-line"></i></span></li>
+        </ul>
+      </nav>
+    </aside>
+  </div>
+  <button class="post-toc-fab" id="postTocFab" aria-label="目录" title="展开 / 收起目录"><i class="ri-list-unordered"></i></button>
+
   <script src="/js/particles.js"></script>
   <script>
     (function () {
@@ -319,6 +322,7 @@
       var setToc = function (open) {
         panel.classList.toggle('open', open);
         fab.classList.toggle('open', open);
+        document.body.classList.toggle('toc-open', open);
         fab.querySelector('i').className = open ? 'ri-close-line' : 'ri-list-unordered';
       };
       if (fab && panel) {

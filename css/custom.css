@@ -44,6 +44,7 @@ body {
   .content,
   .content.on {
     margin-left: 24rem !important;
+    width: calc(100% - 24rem) !important;
     transform: none !important;
   }
 
@@ -268,14 +269,20 @@ body {
   }
 }
 
-/* 文章主体：大屏为「正文 + 常驻目录栏」，中小屏正文占满、目录悬浮覆盖 */
+/* 文章主体：全宽三栏（左侧栏 + 正文 + 右侧目录），正文左对齐填满、无左右留白 */
 .post-layout {
-  display: block;
+  display: flex;
+  align-items: flex-start;
+}
+
+/* 文章页去掉 .outer 的宽度上限，让正文铺满可用空间 */
+.outer.post-layout {
+  max-width: none !important;
 }
 
 .post-body {
-  max-width: 88rem;
-  margin: 0 auto;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .post-body .article {
@@ -290,22 +297,6 @@ body {
   .post-body .article {
     padding: 2.6rem 2rem;
     border-radius: 1.2rem;
-  }
-}
-
-/* 大屏：正文与目录并排，目录常驻右侧占位、绝不再挤压正文 */
-@media (min-width: 1500px) {
-  .post-layout {
-    display: flex;
-    gap: 3.5rem;
-    align-items: flex-start;
-    justify-content: center;
-  }
-  .post-body {
-    flex: 1 1 84rem;
-    max-width: 84rem;
-    min-width: 0;
-    margin: 0;
   }
 }
 
@@ -554,7 +545,7 @@ body {
   padding: 0.15em 0.45em;
 }
 
-/* ---------- 右侧悬浮目录 ---------- */
+/* ---------- 右侧目录（展开占满右侧一栏） ---------- */
 .post-toc-fab {
   position: fixed;
   right: 2rem;
@@ -572,42 +563,49 @@ body {
   font-size: 2.2rem;
   cursor: pointer;
   box-shadow: 0 1rem 2.4rem rgba(37, 99, 235, 0.35);
-  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease, opacity 0.25s ease;
 }
 
 .post-toc-fab:hover {
   transform: scale(1.08);
 }
 
-.post-toc-fab.open {
-  background: #1e293b;
-  box-shadow: 0 1rem 2.4rem rgba(30, 41, 59, 0.35);
+.post-toc-fab.open,
+body.toc-open .post-toc-fab {
+  opacity: 0;
+  pointer-events: none;
 }
 
+/* 目录栏：折叠时宽 0，展开时占 26rem 全高，贴住右侧边 */
 .post-toc {
-  position: fixed;
-  right: 2rem;
-  top: calc(38% + 6.4rem);
-  z-index: 89;
-  width: 27rem;
-  max-width: calc(100vw - 2.4rem);
-  max-height: 52vh;
-  overflow-y: auto;
-  padding: 2rem 2.2rem;
-  background: #ffffff;
-  border: 1px solid #eef1f6;
-  border-radius: 1.3rem;
-  box-shadow: 0 1.6rem 4rem rgba(30, 41, 59, 0.16);
-  transform: translateX(120%);
+  flex: 0 0 auto;
+  width: 0;
+  min-width: 0;
+  margin-left: 0;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  overflow: hidden;
   opacity: 0;
   visibility: hidden;
-  transition: transform 0.28s ease, opacity 0.28s ease, visibility 0.28s;
+  transition: width 0.32s ease, margin-left 0.32s ease, opacity 0.22s ease, visibility 0.32s;
 }
 
 .post-toc.open {
-  transform: translateX(0);
+  width: 26rem;
+  margin-left: 3rem;
   opacity: 1;
   visibility: visible;
+}
+
+.post-toc__inner {
+  width: 26rem;
+  height: 100%;
+  overflow-y: auto;
+  padding: 2.4rem 2.2rem;
+  background: #ffffff;
+  border-left: 1px solid #eef1f6;
+  box-shadow: -0.8rem 0 2.4rem rgba(30, 41, 59, 0.06);
 }
 
 .post-toc__title {
@@ -832,7 +830,7 @@ body.darkmode .sidebar::after {
 
 body.darkmode .post-body .article,
 body.darkmode .outer > .article,
-body.darkmode .post-toc,
+body.darkmode .post-toc__inner,
 body.darkmode .article-entry figure,
 body.darkmode .featured-post__link,
 body.darkmode .github-showcase {
@@ -954,8 +952,11 @@ body.darkmode .featured-post__badge {
   filter: invert(0.9) hue-rotate(180deg);
 }
 
-/* ---------- 移动端悬浮目录微调 ---------- */
+/* ---------- 移动端：目录变为全高右侧抽屉（覆盖式） ---------- */
 @media (max-width: 899px) {
+  .post-layout {
+    display: block;
+  }
   .post-toc-fab {
     right: 1.4rem;
     top: auto;
@@ -964,39 +965,26 @@ body.darkmode .featured-post__badge {
     height: 4.2rem;
     font-size: 2rem;
   }
-  .post-toc {
-    right: 1.4rem;
-    top: auto;
-    bottom: 13rem;
-    width: min(27rem, calc(100vw - 2.8rem));
-    max-height: 48vh;
-  }
-}
-
-/* ---------- 大屏：目录常驻右侧栏（置于基础规则之后以保证覆盖） ---------- */
-@media (min-width: 1500px) {
-  .post-toc {
-    position: sticky;
-    top: 3rem;
-    right: auto;
-    flex: 0 0 22rem;
-    width: 22rem;
+  .post-toc,
+  .post-toc.open {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: auto;
+    width: min(30rem, 88vw);
+    height: 100vh;
+    margin-left: 0;
     max-width: none;
-    max-height: calc(100vh - 6rem);
-    transform: none;
-    opacity: 1;
-    visibility: visible;
-    transition: none;
+    z-index: 96;
+    overflow: hidden;
+    transform: translateX(100%);
+    transition: transform 0.3s ease, opacity 0.3s ease, visibility 0.3s;
   }
   .post-toc.open {
-    transform: none;
-    opacity: 1;
-    visibility: visible;
+    transform: translateX(0);
   }
-  .post-toc-fab {
-    display: none;
-  }
-  .post-toc__close {
-    display: none;
+  .post-toc__inner {
+    width: 100%;
+    height: 100%;
   }
 }
