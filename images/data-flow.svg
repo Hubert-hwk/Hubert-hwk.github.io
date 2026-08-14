@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 560" font-family="'PingFang SC','Microsoft YaHei','Noto Sans CJK SC',sans-serif">
+  <defs>
+    <marker id="arrf" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#3b82f6"/>
+    </marker>
+  </defs>
+
+  <!-- 四个模块 -->
+  <g>
+    <rect x="70" y="60" width="260" height="90" rx="14" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+    <text x="200" y="97" text-anchor="middle" fill="#0f172a" font-size="18" font-weight="700">评测 · 信号</text>
+    <text x="200" y="122" text-anchor="middle" fill="#64748b" font-size="12">方向指引 / 质量门控 / 经验筛选</text>
+
+    <rect x="430" y="60" width="260" height="90" rx="14" fill="#ffffff" stroke="#c7d8f5" stroke-width="1.5"/>
+    <text x="560" y="97" text-anchor="middle" fill="#0f172a" font-size="18" font-weight="700">记忆 · 积累</text>
+    <text x="560" y="122" text-anchor="middle" fill="#64748b" font-size="12">策展写入 / 分层存储 / 渐进披露</text>
+
+    <rect x="70" y="410" width="260" height="90" rx="14" fill="#ffffff" stroke="#c7d8f5" stroke-width="1.5"/>
+    <text x="200" y="447" text-anchor="middle" fill="#0f172a" font-size="18" font-weight="700">落地 · 工程化</text>
+    <text x="200" y="472" text-anchor="middle" fill="#64748b" font-size="12">八环节链路 / Diff 修复 / 灰度回滚</text>
+
+    <rect x="430" y="410" width="260" height="90" rx="14" fill="#ffffff" stroke="#c7d8f5" stroke-width="1.5"/>
+    <text x="560" y="447" text-anchor="middle" fill="#0f172a" font-size="18" font-weight="700">控制 · 人机协作</text>
+    <text x="560" y="472" text-anchor="middle" fill="#64748b" font-size="12">分级自主 / 五节点人审 / 方向审计</text>
+  </g>
+
+  <!-- 通路一：评测→记忆 -->
+  <g fill="none" stroke="#3b82f6" stroke-width="3" marker-end="url(#arrf)">
+    <path d="M 330 105 L 426 105"/>
+  </g>
+  <text x="378" y="88" text-anchor="middle" fill="#2563eb" font-size="12.5" font-weight="700">① 好经验信号 → 触发记忆写入</text>
+
+  <!-- 通路二：评测→落地 -->
+  <g fill="none" stroke="#3b82f6" stroke-width="3" marker-end="url(#arrf)">
+    <path d="M 200 150 L 200 406"/>
+  </g>
+  <text x="345" y="274" text-anchor="middle" fill="#2563eb" font-size="12.5" font-weight="700">② 问题/差距信号</text>
+  <text x="345" y="294" text-anchor="middle" fill="#64748b" font-size="12">驱动修复方案生成</text>
+
+  <!-- 通路三：落地→控制 -->
+  <g fill="none" stroke="#3b82f6" stroke-width="3" marker-end="url(#arrf)">
+    <path d="M 330 455 L 426 455"/>
+  </g>
+  <text x="378" y="438" text-anchor="middle" fill="#2563eb" font-size="12.5" font-weight="700">③ 门控 + 人工确认 → 灰度上线</text>
+
+  <!-- 通路四：控制→评测（回流） -->
+  <g fill="none" stroke="#94a3b8" stroke-width="3" stroke-dasharray="7 5" marker-end="url(#arrf)">
+    <path d="M 560 410 L 560 200 L 330 200 L 330 110"/>
+  </g>
+  <text x="570" y="186" fill="#64748b" font-size="12.5" font-weight="700">④ 回流：新失败样本 → 下一轮评测</text>
+
+  <text x="380" y="545" text-anchor="middle" fill="#94a3b8" font-size="13.5">任何一条通路断了，飞轮就卡住——组件之间的「箭头」才是关键</text>
+</svg>

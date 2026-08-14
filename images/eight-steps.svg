@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 360" font-family="'PingFang SC','Microsoft YaHei','Noto Sans CJK SC',sans-serif">
+  <defs>
+    <marker id="arrh" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#3b82f6"/>
+    </marker>
+  </defs>
+
+  <!-- 第一行 -->
+  <g>
+    <rect x="20" y="40" width="180" height="64" rx="12" fill="#ffffff" stroke="#c7d8f5" stroke-width="1.5"/>
+    <text x="110" y="70" text-anchor="middle" fill="#0f172a" font-size="15" font-weight="700">① 诊断归因</text>
+    <text x="110" y="92" text-anchor="middle" fill="#64748b" font-size="11.5">从「错了」到「为什么错」</text>
+
+    <rect x="224" y="40" width="180" height="64" rx="12" fill="#ffffff" stroke="#c7d8f5" stroke-width="1.5"/>
+    <text x="314" y="70" text-anchor="middle" fill="#0f172a" font-size="15" font-weight="700">② 信号汇聚</text>
+    <text x="314" y="92" text-anchor="middle" fill="#64748b" font-size="11.5">诊断 + Playbook + 外部知识</text>
+
+    <rect x="428" y="40" width="180" height="64" rx="12" fill="#ffffff" stroke="#c7d8f5" stroke-width="1.5"/>
+    <text x="518" y="70" text-anchor="middle" fill="#0f172a" font-size="15" font-weight="700">③ 生成候选</text>
+    <text x="518" y="92" text-anchor="middle" fill="#64748b" font-size="11.5">Diff 模式，只改该改的</text>
+
+    <rect x="632" y="40" width="180" height="64" rx="12" fill="#ffffff" stroke="#c7d8f5" stroke-width="1.5"/>
+    <text x="722" y="70" text-anchor="middle" fill="#0f172a" font-size="15" font-weight="700">④ 独立评测</text>
+    <text x="722" y="92" text-anchor="middle" fill="#64748b" font-size="11.5">隔离环境，逐个验证</text>
+  </g>
+
+  <!-- 行间箭头 -->
+  <g fill="none" stroke="#3b82f6" stroke-width="2.5" marker-end="url(#arrh)">
+    <path d="M 200 72 L 220 72"/>
+    <path d="M 404 72 L 424 72"/>
+    <path d="M 608 72 L 628 72"/>
+    <!-- 第四步接到第二行 -->
+    <path d="M 722 104 L 722 128 L 110 128 L 110 148"/>
+  </g>
+  <text x="420" y="122" text-anchor="middle" fill="#94a3b8" font-size="11.5">评测通过、门控放行，才进入下一轮</text>
+
+  <!-- 第二行 -->
+  <g>
+    <rect x="20" y="150" width="180" height="64" rx="12" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+    <text x="110" y="180" text-anchor="middle" fill="#1e3a8a" font-size="15" font-weight="700">⑤ 安全门控</text>
+    <text x="110" y="202" text-anchor="middle" fill="#64748b" font-size="11.5">语法 → 回归 → 显著性 → 人审</text>
+
+    <rect x="224" y="150" width="180" height="64" rx="12" fill="#ffffff" stroke="#c7d8f5" stroke-width="1.5"/>
+    <text x="314" y="180" text-anchor="middle" fill="#0f172a" font-size="15" font-weight="700">⑥ 灰度发布</text>
+    <text x="314" y="202" text-anchor="middle" fill="#64748b" font-size="11.5">10% 流量 × 7 天观测</text>
+
+    <rect x="428" y="150" width="180" height="64" rx="12" fill="#ffffff" stroke="#c7d8f5" stroke-width="1.5"/>
+    <text x="518" y="180" text-anchor="middle" fill="#0f172a" font-size="15" font-weight="700">⑦ 监控回流</text>
+    <text x="518" y="202" text-anchor="middle" fill="#64748b" font-size="11.5">失败样本进入下一轮种子池</text>
+
+    <rect x="632" y="150" width="180" height="64" rx="12" fill="#ffffff" stroke="#c7d8f5" stroke-width="1.5"/>
+    <text x="722" y="180" text-anchor="middle" fill="#0f172a" font-size="15" font-weight="700">⑧ 经验沉淀</text>
+    <text x="722" y="202" text-anchor="middle" fill="#64748b" font-size="11.5">写入 Playbook，避免重踩坑</text>
+  </g>
+
+  <g fill="none" stroke="#3b82f6" stroke-width="2.5" marker-end="url(#arrh)">
+    <path d="M 200 182 L 220 182"/>
+    <path d="M 404 182 L 424 182"/>
+    <path d="M 608 182 L 628 182"/>
+  </g>
+
+  <text x="410" y="250" text-anchor="middle" fill="#94a3b8" font-size="13">八个环节 = 让「改进 Agent」这件事本身也变得工程化、可靠（Agent 版 CI/CD）</text>
+</svg>

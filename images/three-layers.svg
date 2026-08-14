@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 470" font-family="'PingFang SC','Microsoft YaHei','Noto Sans CJK SC',sans-serif">
+  <!-- 表头 -->
+  <g font-size="13" font-weight="700" fill="#64748b">
+    <text x="40" y="42">层级</text>
+    <text x="215" y="42">改什么</text>
+    <text x="465" y="42">持久性</text>
+    <text x="590" y="42">成本 / 风险</text>
+  </g>
+
+  <!-- 第一层 Artifacts 迭代 -->
+  <g>
+    <rect x="30" y="60" width="700" height="96" rx="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>
+    <text x="40" y="100" fill="#0f172a" font-size="15.5" font-weight="700">第一层 · Artifacts 迭代</text>
+    <text x="40" y="124" fill="#94a3b8" font-size="12">输出产物</text>
+    <text x="215" y="100" fill="#475569" font-size="13">改输出产物：代码多写几版、方案多改几稿</text>
+    <text x="215" y="124" fill="#94a3b8" font-size="12">任务结束即归零，下次遇到同类问题不会更快</text>
+    <text x="465" y="100" fill="#475569" font-size="13">无</text>
+    <text x="590" y="100" fill="#475569" font-size="13">低 · 已成熟</text>
+    <text x="590" y="124" fill="#94a3b8" font-size="12">Self-Refine 等</text>
+  </g>
+
+  <!-- 第二层 Harness 自改进（高亮） -->
+  <g>
+    <rect x="30" y="176" width="700" height="96" rx="12" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+    <text x="40" y="216" fill="#1e3a8a" font-size="15.5" font-weight="700">第二层 · Harness 自改进 ⭐</text>
+    <text x="40" y="240" fill="#2563eb" font-size="12" font-weight="700">当前主战场</text>
+    <text x="215" y="216" fill="#334155" font-size="13">改记忆 / Skill / Prompt / 工具配置 / 工作流</text>
+    <text x="215" y="240" fill="#64748b" font-size="12">持久化到文件或数据库，跨会话生效</text>
+    <text x="465" y="216" fill="#334155" font-size="13">中 · 一次修改长期受益</text>
+    <text x="590" y="216" fill="#334155" font-size="13">低 · 可控（可回滚）</text>
+    <text x="590" y="240" fill="#64748b" font-size="12">即时生效，改错一键回滚</text>
+  </g>
+
+  <!-- 第三层 Model 进化 -->
+  <g>
+    <rect x="30" y="292" width="700" height="96" rx="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>
+    <text x="40" y="332" fill="#0f172a" font-size="15.5" font-weight="700">第三层 · Model 进化</text>
+    <text x="40" y="356" fill="#94a3b8" font-size="12">模型参数</text>
+    <text x="215" y="332" fill="#475569" font-size="13">改模型参数本身：Agent RL、自对弈微调写权重</text>
+    <text x="215" y="356" fill="#94a3b8" font-size="12">把经验直接写进模型</text>
+    <text x="465" y="332" fill="#475569" font-size="13">最强</text>
+    <text x="590" y="332" fill="#475569" font-size="13">最高 · 最危险</text>
+    <text x="590" y="356" fill="#94a3b8" font-size="12">仍在研究阶段</text>
+  </g>
+
+  <text x="380" y="428" text-anchor="middle" fill="#475569" font-size="13.5">写一条 Skill（Harness 层）能解决的事，不需要微调模型——这就是为什么 Harness 层是主战场</text>
+</svg>

@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 620" font-family="'PingFang SC','Microsoft YaHei','Noto Sans CJK SC',sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#3b82f6"/>
+    </marker>
+  </defs>
+  <!-- 背景环 -->
+  <circle cx="380" cy="310" r="150" fill="none" stroke="#e2e8f0" stroke-width="1.5" stroke-dasharray="4 6"/>
+  <circle cx="380" cy="310" r="96" fill="#eff6ff" stroke="#bfdbfe" stroke-width="2"/>
+  <circle cx="380" cy="310" r="78" fill="#2563eb"/>
+  <text x="380" y="305" text-anchor="middle" fill="#ffffff" font-size="26" font-weight="700">自进化飞轮</text>
+  <text x="380" y="332" text-anchor="middle" fill="#dbeafe" font-size="12">四齿咬合 · 持续转动</text>
+
+  <!-- 四个齿轮 -->
+  <g>
+    <!-- 评测（上） -->
+    <rect x="270" y="40" width="220" height="80" rx="14" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+    <text x="380" y="76" text-anchor="middle" fill="#0f172a" font-size="19" font-weight="700">评测 · 信号</text>
+    <text x="380" y="102" text-anchor="middle" fill="#64748b" font-size="12">飞轮的「眼睛」：感知哪里有问题</text>
+    <!-- 记忆（右） -->
+    <rect x="530" y="290" width="220" height="80" rx="14" fill="#ffffff" stroke="#c7d8f5" stroke-width="1.5"/>
+    <text x="640" y="326" text-anchor="middle" fill="#0f172a" font-size="19" font-weight="700">记忆 · 积累</text>
+    <text x="640" y="352" text-anchor="middle" fill="#64748b" font-size="12">飞轮的「大脑」：积累可复用经验</text>
+    <!-- 落地（下） -->
+    <rect x="270" y="500" width="220" height="80" rx="14" fill="#ffffff" stroke="#c7d8f5" stroke-width="1.5"/>
+    <text x="380" y="536" text-anchor="middle" fill="#0f172a" font-size="19" font-weight="700">落地 · 工程化</text>
+    <text x="380" y="562" text-anchor="middle" fill="#64748b" font-size="12">飞轮的「手脚」：把经验变成改进</text>
+    <!-- 控制（左） -->
+    <rect x="10" y="290" width="220" height="80" rx="14" fill="#ffffff" stroke="#c7d8f5" stroke-width="1.5"/>
+    <text x="120" y="326" text-anchor="middle" fill="#0f172a" font-size="19" font-weight="700">控制 · 人机协作</text>
+    <text x="120" y="352" text-anchor="middle" fill="#64748b" font-size="12">飞轮的「方向盘与刹车」</text>
+  </g>
+
+  <!-- 循环箭头 -->
+  <g fill="none" stroke="#3b82f6" stroke-width="3" marker-end="url(#arr)">
+    <!-- 评测→记忆 -->
+    <path d="M 332 178 A 140 140 0 0 1 518 286"/>
+    <!-- 记忆→落地 -->
+    <path d="M 511 358 A 140 140 0 0 1 356 448"/>
+    <!-- 落地→控制 -->
+    <path d="M 332 442 A 140 140 0 0 1 242 286"/>
+    <!-- 控制→评测 -->
+    <path d="M 249 262 A 140 140 0 0 1 404 172"/>
+  </g>
+
+  <!-- 序号徽标 -->
+  <g>
+    <circle cx="450" cy="189" r="14" fill="#ffffff" stroke="#3b82f6" stroke-width="1.5"/>
+    <text x="450" y="194" text-anchor="middle" fill="#2563eb" font-size="13" font-weight="700">①</text>
+    <circle cx="450" cy="431" r="14" fill="#ffffff" stroke="#3b82f6" stroke-width="1.5"/>
+    <text x="450" y="436" text-anchor="middle" fill="#2563eb" font-size="13" font-weight="700">②</text>
+    <circle cx="259" cy="380" r="14" fill="#ffffff" stroke="#3b82f6" stroke-width="1.5"/>
+    <text x="259" y="385" text-anchor="middle" fill="#2563eb" font-size="13" font-weight="700">③</text>
+    <circle cx="310" cy="189" r="14" fill="#ffffff" stroke="#3b82f6" stroke-width="1.5"/>
+    <text x="310" y="194" text-anchor="middle" fill="#2563eb" font-size="13" font-weight="700">④</text>
+  </g>
+
+  <text x="380" y="612" text-anchor="middle" fill="#94a3b8" font-size="14">评测 → 记忆 → 落地 → 控制 → 评测（数据通路不断，飞轮才转得起来）</text>
+</svg>
