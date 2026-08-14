@@ -268,13 +268,13 @@ body {
   }
 }
 
-/* 文章主体（目录改为右侧悬浮面板，正文独占一行） */
+/* 文章主体：大屏为「正文 + 常驻目录栏」，中小屏正文占满、目录悬浮覆盖 */
 .post-layout {
   display: block;
 }
 
 .post-body {
-  max-width: 92rem;
+  max-width: 88rem;
   margin: 0 auto;
 }
 
@@ -284,7 +284,6 @@ body {
   border-radius: 1.6rem;
   padding: 4.5rem 5rem;
   box-shadow: 0 1rem 3rem rgba(30, 41, 59, 0.05);
-  transition: margin-right 0.28s ease;
 }
 
 @media (max-width: 899px) {
@@ -294,10 +293,19 @@ body {
   }
 }
 
-/* 打开目录时，为右侧面板腾出空间（宽屏） */
-@media (min-width: 1200px) {
-  body.toc-open .post-body .article {
-    margin-right: 30rem;
+/* 大屏：正文与目录并排，目录常驻右侧占位、绝不再挤压正文 */
+@media (min-width: 1500px) {
+  .post-layout {
+    display: flex;
+    gap: 3.5rem;
+    align-items: flex-start;
+    justify-content: center;
+  }
+  .post-body {
+    flex: 1 1 84rem;
+    max-width: 84rem;
+    min-width: 0;
+    margin: 0;
   }
 }
 
@@ -963,7 +971,32 @@ body.darkmode .featured-post__badge {
     width: min(27rem, calc(100vw - 2.8rem));
     max-height: 48vh;
   }
-  body.toc-open .post-body .article {
-    margin-right: 0;
+}
+
+/* ---------- 大屏：目录常驻右侧栏（置于基础规则之后以保证覆盖） ---------- */
+@media (min-width: 1500px) {
+  .post-toc {
+    position: sticky;
+    top: 3rem;
+    right: auto;
+    flex: 0 0 22rem;
+    width: 22rem;
+    max-width: none;
+    max-height: calc(100vh - 6rem);
+    transform: none;
+    opacity: 1;
+    visibility: visible;
+    transition: none;
+  }
+  .post-toc.open {
+    transform: none;
+    opacity: 1;
+    visibility: visible;
+  }
+  .post-toc-fab {
+    display: none;
+  }
+  .post-toc__close {
+    display: none;
   }
 }

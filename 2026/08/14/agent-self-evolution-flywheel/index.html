@@ -319,7 +319,6 @@
       var setToc = function (open) {
         panel.classList.toggle('open', open);
         fab.classList.toggle('open', open);
-        document.body.classList.toggle('toc-open', open);
         fab.querySelector('i').className = open ? 'ri-close-line' : 'ri-list-unordered';
       };
       if (fab && panel) {
