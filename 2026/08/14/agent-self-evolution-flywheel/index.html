@@ -220,38 +220,6 @@
             </div>
           </article>
         </div>
-        <aside class="post-toc">
-          <div class="post-toc__inner">
-            <p class="post-toc__title">本文目录</p>
-            <ol>
-              <li class="lvl-2"><a href="#先对齐：自进化改的到底是什么">先对齐：自进化改的到底是什么？</a></li>
-              <li class="lvl-2"><a href="#齿一：信号（评测）——飞轮的第一齿">齿一：信号（评测）——飞轮的第一齿</a></li>
-              <li class="lvl-3"><a href="#最致命的坑：弱评估器">最致命的坑：弱评估器</a></li>
-              <li class="lvl-3"><a href="#评测体系的七个难题">评测体系的七个难题</a></li>
-              <li class="lvl-3"><a href="#怎么搭一套可信的评测体系">怎么搭一套可信的评测体系</a></li>
-              <li class="lvl-3"><a href="#skill-评测的特殊性：证明-skill-真的有用比想象中难">Skill 评测的特殊性</a></li>
-              <li class="lvl-2"><a href="#齿二：记忆（积累）——把信号记住">齿二：记忆（积累）——把信号「记住」</a></li>
-              <li class="lvl-3"><a href="#写入：agent-不是录音机，而是策展人">写入：策展而非全存</a></li>
-              <li class="lvl-3"><a href="#存储：分层架构-生命周期管理">存储：分层 + 生命周期</a></li>
-              <li class="lvl-3"><a href="#读取：渐进披露-严格预算">读取：渐进披露 + 严格预算</a></li>
-              <li class="lvl-2"><a href="#齿三：落地——从知道问题到产出修复有多远">齿三：落地——从「知道」到「产出修复」</a></li>
-              <li class="lvl-3"><a href="#自动化-≠-全自动">自动化 ≠ 全自动</a></li>
-              <li class="lvl-3"><a href="#完整链路有八个环节">完整链路有八个环节</a></li>
-              <li class="lvl-3"><a href="#dreaming：异步的做梦式进化">Dreaming：异步「做梦」式进化</a></li>
-              <li class="lvl-2"><a href="#齿四：控制——人不是效率的瓶颈，是正确性的保障">齿四：控制——正确性的保障</a></li>
-              <li class="lvl-3"><a href="#分级自主，渐进放权">分级自主，渐进放权</a></li>
-              <li class="lvl-3"><a href="#五个必须有人的关键节点">五个必须有人的关键节点</a></li>
-              <li class="lvl-3"><a href="#审核疲劳：落地中最常见的失败模式">审核疲劳</a></li>
-              <li class="lvl-3"><a href="#对齐漂移：进化方向如何与人类意图对齐">对齐漂移</a></li>
-              <li class="lvl-2"><a href="#飞轮怎么咬合起来">飞轮怎么咬合起来</a></li>
-              <li class="lvl-3"><a href="#四条关键数据通路">四条关键数据通路</a></li>
-              <li class="lvl-3"><a href="#启动与持续">启动与持续</a></li>
-              <li class="lvl-3"><a href="#什么场景最容易跑通">什么场景最容易跑通？</a></li>
-              <li class="lvl-2"><a href="#从零到一：四阶段落地路线">从零到一：四阶段落地路线</a></li>
-              <li class="lvl-2"><a href="#最后：三条原则收束">最后：三条原则收束</a></li>
-            </ol>
-          </div>
-        </aside>
       </section>
       <footer class="footer">
         <div class="outer"><ul><li>Copyrights &copy; 2024-2026 <i class="ri-heart-fill heart_icon"></i> Hwk</li></ul></div>
@@ -273,6 +241,38 @@
       </nav>
     </aside>
   </div>
+  <button class="post-toc-fab" id="postTocFab" aria-label="目录" title="展开 / 收起目录"><i class="ri-list-unordered"></i></button>
+  <aside class="post-toc" id="postTocPanel" aria-label="文章目录">
+    <p class="post-toc__title">本文目录 <button class="post-toc__close" id="postTocClose" aria-label="关闭目录"><i class="ri-close-line"></i></button></p>
+    <ol>
+      <li class="lvl-2"><a data-target="先对齐：自进化改的到底是什么" href="#先对齐：自进化改的到底是什么">先对齐：自进化改的到底是什么？</a></li>
+      <li class="lvl-2"><a data-target="齿一：信号（评测）——飞轮的第一齿" href="#齿一：信号（评测）——飞轮的第一齿">齿一：信号（评测）——飞轮的第一齿</a></li>
+      <li class="lvl-3"><a data-target="最致命的坑：弱评估器" href="#最致命的坑：弱评估器">最致命的坑：弱评估器</a></li>
+      <li class="lvl-3"><a data-target="评测体系的七个难题" href="#评测体系的七个难题">评测体系的七个难题</a></li>
+      <li class="lvl-3"><a data-target="怎么搭一套可信的评测体系" href="#怎么搭一套可信的评测体系">怎么搭一套可信的评测体系</a></li>
+      <li class="lvl-3"><a data-target="skill-评测的特殊性：证明-skill-真的有用比想象中难" href="#skill-评测的特殊性：证明-skill-真的有用比想象中难">Skill 评测的特殊性</a></li>
+      <li class="lvl-2"><a data-target="齿二：记忆（积累）——把信号记住" href="#齿二：记忆（积累）——把信号记住">齿二：记忆（积累）——把信号「记住」</a></li>
+      <li class="lvl-3"><a data-target="写入：agent-不是录音机，而是策展人" href="#写入：agent-不是录音机，而是策展人">写入：策展而非全存</a></li>
+      <li class="lvl-3"><a data-target="存储：分层架构-生命周期管理" href="#存储：分层架构-生命周期管理">存储：分层 + 生命周期</a></li>
+      <li class="lvl-3"><a data-target="读取：渐进披露-严格预算" href="#读取：渐进披露-严格预算">读取：渐进披露 + 严格预算</a></li>
+      <li class="lvl-2"><a data-target="齿三：落地——从知道问题到产出修复有多远" href="#齿三：落地——从知道问题到产出修复有多远">齿三：落地——从「知道」到「产出修复」</a></li>
+      <li class="lvl-3"><a data-target="自动化-≠-全自动" href="#自动化-≠-全自动">自动化 ≠ 全自动</a></li>
+      <li class="lvl-3"><a data-target="完整链路有八个环节" href="#完整链路有八个环节">完整链路有八个环节</a></li>
+      <li class="lvl-3"><a data-target="dreaming：异步的做梦式进化" href="#dreaming：异步的做梦式进化">Dreaming：异步「做梦」式进化</a></li>
+      <li class="lvl-2"><a data-target="齿四：控制——人不是效率的瓶颈，是正确性的保障" href="#齿四：控制——人不是效率的瓶颈，是正确性的保障">齿四：控制——正确性的保障</a></li>
+      <li class="lvl-3"><a data-target="分级自主，渐进放权" href="#分级自主，渐进放权">分级自主，渐进放权</a></li>
+      <li class="lvl-3"><a data-target="五个必须有人的关键节点" href="#五个必须有人的关键节点">五个必须有人的关键节点</a></li>
+      <li class="lvl-3"><a data-target="审核疲劳：落地中最常见的失败模式" href="#审核疲劳：落地中最常见的失败模式">审核疲劳</a></li>
+      <li class="lvl-3"><a data-target="对齐漂移：进化方向如何与人类意图对齐" href="#对齐漂移：进化方向如何与人类意图对齐">对齐漂移</a></li>
+      <li class="lvl-2"><a data-target="飞轮怎么咬合起来" href="#飞轮怎么咬合起来">飞轮怎么咬合起来</a></li>
+      <li class="lvl-3"><a data-target="四条关键数据通路" href="#四条关键数据通路">四条关键数据通路</a></li>
+      <li class="lvl-3"><a data-target="启动与持续" href="#启动与持续">启动与持续</a></li>
+      <li class="lvl-3"><a data-target="什么场景最容易跑通" href="#什么场景最容易跑通">什么场景最容易跑通？</a></li>
+      <li class="lvl-2"><a data-target="从零到一：四阶段落地路线" href="#从零到一：四阶段落地路线">从零到一：四阶段落地路线</a></li>
+      <li class="lvl-2"><a data-target="最后：三条原则收束" href="#最后：三条原则收束">最后：三条原则收束</a></li>
+    </ol>
+  </aside>
+  <script src="/js/particles.js"></script>
   <script>
     (function () {
       // 移动端侧栏开关
@@ -308,9 +308,55 @@
         bar.style.width = (p * 100).toFixed(2) + '%';
       };
       if (scroller && bar) {
-        scroller.addEventListener('scroll', update, { passive: true });
+        document.addEventListener('scroll', update, { passive: true, capture: true });
         window.addEventListener('resize', update);
         update();
+      }
+      // 右侧悬浮目录：展开 / 收起
+      var fab = document.getElementById('postTocFab');
+      var panel = document.getElementById('postTocPanel');
+      var tocClose = document.getElementById('postTocClose');
+      var setToc = function (open) {
+        panel.classList.toggle('open', open);
+        fab.classList.toggle('open', open);
+        document.body.classList.toggle('toc-open', open);
+        fab.querySelector('i').className = open ? 'ri-close-line' : 'ri-list-unordered';
+      };
+      if (fab && panel) {
+        fab.addEventListener('click', function () {
+          setToc(!panel.classList.contains('open'));
+        });
+        if (tocClose) {
+          tocClose.addEventListener('click', function () { setToc(false); });
+        }
+      }
+      // 滚动高亮当前章节 + 点击平滑跳转
+      var headings = Array.prototype.slice.call(document.querySelectorAll('.article-entry h2, .article-entry h3'));
+      var tocLinks = Array.prototype.slice.call(document.querySelectorAll('.post-toc a[data-target]'));
+      var spy = function () {
+        if (!scroller || !tocLinks.length) return;
+        var cTop = scroller.getBoundingClientRect().top + 150;
+        var current = null;
+        for (var i = 0; i < headings.length; i++) {
+          if (headings[i].getBoundingClientRect().top <= cTop) { current = headings[i]; } else { break; }
+        }
+        tocLinks.forEach(function (a) {
+          a.classList.toggle('active', !!current && a.getAttribute('data-target') === current.id);
+        });
+      };
+      if (scroller && tocLinks.length) {
+        document.addEventListener('scroll', spy, { passive: true, capture: true });
+        window.addEventListener('resize', spy);
+        tocLinks.forEach(function (a) {
+          a.addEventListener('click', function (e) {
+            e.preventDefault();
+            var target = document.getElementById(a.getAttribute('data-target'));
+            if (target) {
+              scroller.scrollTo({ top: target.offsetTop - 100, behavior: 'smooth' });
+            }
+          });
+        });
+        spy();
       }
     })();
   </script>
