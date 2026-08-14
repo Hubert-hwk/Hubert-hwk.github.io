@@ -55,6 +55,7 @@
       </footer>
     </main>
     <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
       <nav class="navbar">
         <div class="logo"><a href="/"><img src="/images/ayer-side.svg" alt="Hubert Blog"></a></div>
         <ul class="nav nav-main">
@@ -63,9 +64,38 @@
           <li class="nav-item"><a class="nav-item-link" href="/about/hwk.html">关于我</a></li>
           <li class="nav-item"><a class="nav-item-link" href="https://github.com/Hubert-hwk" target="_blank" rel="noopener">GitHub</a></li>
         </ul>
+        <ul class="nav nav-main" style="margin-top:1.6rem;border-top:1px solid #eef1f6;padding-top:1rem">
+          <li class="nav-item"><span class="post-dark" id="postDark" title="切换深浅色模式"><i class="ri-moon-line"></i></span></li>
+        </ul>
       </nav>
     </aside>
   </div>
-<script src="/js/particles.js"></script>
+  <script src="/js/particles.js"></script>
+  <script>
+    (function () {
+      var toggle = document.querySelector('.navbar-toggle');
+      if (toggle) {
+        toggle.addEventListener('click', function () {
+          document.querySelector('.content').classList.toggle('on');
+          document.querySelector('.sidebar').classList.toggle('on');
+        });
+      }
+      var darkBtn = document.getElementById('postDark');
+      var applyDark = function (on) {
+        document.body.classList.toggle('darkmode', on);
+        var i = darkBtn.querySelector('i');
+        i.classList.toggle('ri-moon-line', !on);
+        i.classList.toggle('ri-sun-line', on);
+      };
+      if (darkBtn) {
+        darkBtn.addEventListener('click', function () {
+          var on = !document.body.classList.contains('darkmode');
+          applyDark(on);
+          if (on) { sessionStorage.setItem('darkmode', 1); } else { sessionStorage.removeItem('darkmode'); }
+        });
+        applyDark(sessionStorage.getItem('darkmode') === '1');
+      }
+    })();
+  </script>
 </body>
 </html>

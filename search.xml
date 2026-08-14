@@ -19,44 +19,11 @@
   <entry>
     <title>从兴趣代码到 AI 工程：我的 GitHub 近况</title>
     <url>/2026/08/02/github-project-update/</url>
-    <content><![CDATA[<p>记录 Hubert 2026 年 GitHub 项目近况：HealthFlow、浏览器自动化与 AI 工程实践。</p>
+    <content><![CDATA[<p>从 HealthFlow 的多模态医疗辅助流程，到 DuckCoding 的浏览器自动化，这一年我开始把更多兴趣代码做成可运行、可解释、可复用的工程。</p>
 <h2>HealthFlow：让医疗辅助流程可审计</h2>
 <p>把文档理解、动态分诊、证据检索、专科 Agent 和安全校验串成工程闭环。</p>
 <h2>DuckCoding：把重复操作交给浏览器</h2>
 <p>使用 Playwright Core 连接本机浏览器，复用登录态完成每日签到。</p>
-]]></content>
-  </entry>
-  <entry>
-    <title>about</title>
-    <url>/2025/03/03/about-1/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>hello_hexo</title>
-    <url>/2025/02/25/hello-hexo/</url>
-    <content><![CDATA[<p>啦啦啦啦啦</p>
-<h2 id="测试文档"><a href="#测试文档" class="headerlink" title="测试文档"></a>测试文档</h2><p>大大大大大<br><img src="/images/cover2.jpg"></p>
-]]></content>
-      <tags>
-        <tag>test</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Hello World</title>
-    <url>/2025/02/24/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
 ]]></content>
   </entry>
 </search>

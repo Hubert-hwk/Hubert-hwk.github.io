@@ -1,19 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>Hubert Blog</title>
-  <icon>https://www.gravatar.com/avatar/d6bfee4ef3c47c3498a5c132faa12fd9</icon>
   <subtitle>记录 AI 工程、自动化与个人成长</subtitle>
   <link href="https://hubert-hwk.github.io/atom.xml" rel="self"/>
-  
   <link href="https://hubert-hwk.github.io/"/>
   <updated>2026-08-14T00:00:00.000Z</updated>
   <id>https://hubert-hwk.github.io/</id>
-  
   <author>
     <name>Hwk</name>
-    <email>1961700611@qq.com</email>
   </author>
-  
   <generator uri="https://hexo.io/">Hexo</generator>
 
   <entry>
@@ -24,72 +19,13 @@
     <updated>2026-08-14T00:00:00.000Z</updated>
     <summary type="html">从「能跑」到「会进化」——把 Agent 自进化的完整工程闭环拆解为信号、积累、落地、控制四个齿轮，并给出从零到一的落地路线。</summary>
   </entry>
-  
+
   <entry>
     <title>从兴趣代码到 AI 工程：我的 GitHub 近况</title>
     <link href="https://hubert-hwk.github.io/2026/08/02/github-project-update/"/>
     <id>https://hubert-hwk.github.io/2026/08/02/github-project-update/</id>
     <published>2026-08-02T00:00:00.000Z</published>
     <updated>2026-08-02T00:00:00.000Z</updated>
-    <summary type="html">记录 Hubert 2026 年 GitHub 项目近况：HealthFlow、浏览器自动化与 AI 工程实践。</summary>
+    <summary type="html">从 HealthFlow 的多模态医疗辅助流程，到 DuckCoding 的浏览器自动化，这一年我开始把更多兴趣代码做成可运行、可解释、可复用的工程。</summary>
   </entry>
-  
-  <entry>
-    <title>about</title>
-    <link href="https://hubert-hwk.github.io/2025/03/03/about-1/"/>
-    <id>https://hubert-hwk.github.io/2025/03/03/about-1/</id>
-    <published>2025-03-03T07:18:11.000Z</published>
-    <updated>2025-03-03T07:18:11.417Z</updated>
-    
-    
-    
-    
-    
-  </entry>
-  
-  <entry>
-    <title>hello_hexo</title>
-    <link href="https://hubert-hwk.github.io/2025/02/25/hello-hexo/"/>
-    <id>https://hubert-hwk.github.io/2025/02/25/hello-hexo/</id>
-    <published>2025-02-25T05:26:57.000Z</published>
-    <updated>2025-02-25T07:19:06.154Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;p&gt;啦啦啦啦啦&lt;/p&gt;
-&lt;h2 id=&quot;测试文档&quot;&gt;&lt;a href=&quot;#测试文档&quot; class=&quot;headerlink&quot; title=&quot;测试文档&quot;&gt;&lt;/a&gt;测试文档&lt;/h2&gt;&lt;p&gt;大大大大大&lt;br&gt;&lt;img</summary>
-        
-      
-    
-    
-    
-    
-    <category term="test" scheme="https://hubert-hwk.github.io/tags/test/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Hello World</title>
-    <link href="https://hubert-hwk.github.io/2025/02/24/hello-world/"/>
-    <id>https://hubert-hwk.github.io/2025/02/24/hello-world/</id>
-    <published>2025-02-24T12:36:32.651Z</published>
-    <updated>2025-02-24T12:36:32.651Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.io/docs/&quot;&gt;documentation&lt;/a&gt;</summary>
-        
-      
-    
-    
-    
-    
-  </entry>
-  
 </feed>

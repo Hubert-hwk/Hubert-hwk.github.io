@@ -1,0 +1,24 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"></head><body>
+<iframe id="f" src="" style="width:1500px;height:2400px;border:0"></iframe>
+<div id="out">pending</div>
+<script>
+var url = new URLSearchParams(location.search).get('url') || '/';
+var f = document.getElementById('f');
+f.src = url;
+window.addEventListener('load', function(){ setTimeout(function(){
+  var doc = f.contentDocument;
+  var out = document.getElementById('out');
+  var lines = [];
+  lines.push('url=' + url + ' title=' + doc.title.slice(0,50));
+  lines.push('sidebar nav 项: ' + Array.from(doc.querySelectorAll('.nav-main .nav-item-link')).map(function(a){return a.textContent.trim();}).join(' | '));
+  lines.push('canvas=' + !!doc.getElementById('particle-canvas'));
+  lines.push('文章条目数=' + doc.querySelectorAll('.articles .article-type-post, .archive-article').length);
+  var dead = [];
+  Array.from(doc.querySelectorAll('a[href]')).forEach(function(a){
+    var h = a.getAttribute('href');
+    if (h && h.indexOf('/2025')===0 || h && h.indexOf('/tags/')===0 || h && h.indexOf('/categories')===0 || h && h.indexOf('/friends')===0 || h && h.indexOf('/photos')===0 || h && h.indexOf('/_posts')===0) dead.push(h);
+  });
+  lines.push('死链接=' + (dead.length? dead.join(',') : '无'));
+  document.getElementById('out').textContent = lines.join('\n');
+}, 1500); });
+</script></body></html>
