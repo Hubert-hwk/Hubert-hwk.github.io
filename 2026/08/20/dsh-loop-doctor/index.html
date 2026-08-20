@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-hans">
+<head>
+  <meta charset="utf-8" />
+  <meta name="description" content="DeepSeek Harness 把每次运行事实写进 SessionEvent 日志，却没人读。loop-doctor 让 harness 读自己的日志做自诊断：确定性 detour 检测、回放验证的建议、人审后的修复沉淀。140 个测试全绿，已开源。" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>我把 DeepSeek Harness 的日志变成了 Agent 的自诊断医生：loop-doctor 插件家族开源 | Hubert Blog</title>
+  <link rel="shortcut icon" href="/favicon.ico" />
+  <link rel="stylesheet" href="/dist/main.css" />
+  <link rel="stylesheet" href="/css/fonts/remixicon.css" />
+  <link rel="stylesheet" href="/css/custom.css" />
+</head>
+<body>
+  <div id="app">
+    <main class="content on">
+      <div class="post-progress"><span id="postProgress"></span></div>
+      <section class="outer post-layout">
+        <div class="post-body">
+          <article class="article article-type-post" itemscope itemprop="blogPost">
+            <div class="article-inner">
+              <header class="article-header post-hero">
+                <p class="post-hero__eyebrow">Agent 工程 · 开源插件</p>
+                <h1 class="article-title" itemprop="name">我把 DeepSeek Harness 的日志变成了 Agent 的自诊断医生：loop-doctor 插件家族开源</h1>
+                <p class="post-hero__sub">日志不是写来存档的，是写来被读的。loop-doctor 让 DeepSeek Harness 读自己的 SessionEvent 日志做自诊断——确定性弯路检测、回放验证的建议、人审之后的修复沉淀。</p>
+                <div class="post-hero__meta">
+                  <span class="post-hero__meta-item"><i class="ri-calendar-line"></i>2026-08-20</span>
+                  <span class="post-hero__meta-item"><i class="ri-file-text-line"></i>约 2300 字</span>
+                  <span class="post-hero__meta-item"><i class="ri-time-line"></i>阅读约 7 分钟</span>
+                  <span class="post-hero__tag">DeepSeek Harness</span>
+                  <span class="post-hero__tag">插件</span>
+                  <span class="post-hero__tag">自诊断</span>
+                  <span class="post-hero__tag">开源</span>
+                </div>
+              </header>
+              <div class="article-entry" itemprop="articleBody">
+                <p>DeepSeek Harness（dsh）有一个很扎实的设计：它把每一次运行事实——重试、工具调用、上下文压缩、子代理委派——原原本本地写进一条只追加的 <code>SessionEvent</code> 日志。但很长一段时间里，我意识到一个尴尬的事实：<strong>日志写了，却没有人读</strong>。</p>
+                <p>Agent 可以疯狂重试、反复调用同一个失败的函数、把上下文搅成一团、把提示词撑得越来越臃肿——而唯一「看见」这些问题的，只有月底账单上的 Token 消耗和越来越慢的响应。没有人在日志层回答那个最基本的问题：<strong>这次会话，到底浪费在了哪里？</strong></p>
+                <p>所以我把这件事做成了一个插件家族 <strong>loop-doctor</strong>：让 harness 读自己的日志，做自诊断。项目已开源：<a href="https://github.com/Hubert-hwk/dsh-loop-doctor" target="_blank" rel="noopener">Hubert-hwk/dsh-loop-doctor</a>（已打 <code>dsh-plugin</code> topic）。</p>
+
+                <h2 id="核心思路：观察在前-建议在中-写入在后"><a href="#核心思路：观察在前-建议在中-写入在后" class="headerlink" title="核心思路：观察在前、建议在中、写入在后"></a>核心思路：观察在前、建议在中、写入在后</h2>
+                <p>整个家族遵守一条铁律：<strong>观察在前，建议在中，写入在后；写操作永远置于人工复核之后</strong>。它不是一个「全自动自我修复」的黑魔法，而是一套把「诊断」变成工程闭环的系统：</p>
+                <pre><code>session log ─▶ detector ─▶ signal ─▶ advisor ─▶ suggestion + replay
+                                       │              │
+                                       │              ▼
+                                       │        apply: ledger (human)
+                                       │              │
+                                       ▼              ▼
+                          tool: loop_doctor_diagnose   accepted-fix sediment
+                                                            │
+                                       advisor reload ◀─────┘</code></pre>
+                <p>日志流进入 <strong>detector</strong>，折叠成弯路信号；信号交给 <strong>advisor</strong>，映射成建议并做回放验证；建议进入 <strong>apply</strong>，走人工复核台账；被采纳的修复沉淀下来，下次匹配时自动注入——同时，agent 还能通过 <strong>tool</strong> 提供的 <code>loop_doctor_diagnose</code> 按需诊断自己。</p>
+
+                <h2 id="四个包：detector-advisor-apply-tool-diagnose"><a href="#四个包：detector-advisor-apply-tool-diagnose" class="headerlink" title="四个包：detector / advisor / apply / tool-diagnose"></a>四个包：detector / advisor / apply / tool-diagnose</h2>
+
+                <h3 id="detector：确定性规则-不调用-llm"><a href="#detector：确定性规则-不调用-llm" class="headerlink" title="detector：确定性规则，不调用 LLM"></a>detector：确定性规则，不调用 LLM</h3>
+                <p>检测是纯函数式的：<code>patterns.ts</code> 把日志流折叠成五类 <code>DetourSignal</code>——<strong>retry-storm（重试风暴）、tool-misuse（工具误用）、context-thrash（上下文抖动）、prompt-bloat（提示词膨胀）、effect-churn（效果空转）</strong>。全程没有一次模型调用：弯路是机械事实，不该由 LLM 来「感觉」。规则先行，是这条链路的信任基石。</p>
+
+                <h3 id="advisor：回放验证"><a href="#advisor：回放验证" class="headerlink" title="advisor：回放验证——verified 和 simulated 严格区分"></a>advisor：回放验证——verified 和 simulated 严格区分</h3>
+                <p>信号只是「你绕了路」，建议要回答「这么改能省多少」。advisor 用修复模式表把信号映射成 <code>Suggestion</code>，再对精确日志做一次<strong>回放模拟</strong>：能量化出可测量节省的，标记为 <code>replay-verified</code>；只按策略上限估算的，标记为 <code>simulated</code>——两者绝不混同，后者也永远不会驱动自动应用。</p>
+
+                <h3 id="apply：写入面"><a href="#apply：写入面" class="headerlink" title="apply：写入面——人审台账 + 自动应用闸门 + 修复沉淀"></a>apply：写入面——人审台账 + 自动应用闸门 + 修复沉淀</h3>
+                <p>整个家族唯一的持久化写入在这里：一份<strong>人工复核台账</strong>、一道<strong>默认关闭的自动应用闸门</strong>（只放行 replay-verified 且置信度 ≥ 0.9 的修复）、以及一份会增长的「已采纳修复」沉淀（<code>accepted-fixes.jsonl</code>）。沉淀会热重载进 advisor 的实时模式集——<strong>改一次，之后的会话都受益</strong>。</p>
+
+                <h3 id="tool：模型面"><a href="#tool：模型面" class="headerlink" title="tool：模型面——loop_doctor_diagnose"></a>tool：模型面——loop_doctor_diagnose</h3>
+                <p>一个面向模型的工具：agent 可以随时对自己当前会话调用 <code>loop_doctor_diagnose</code>，拿到「检测到的弯路 + 建议 + 验证状态」的结构化报告。诊断是 on-demand 的，不阻塞主循环。</p>
+
+                <h2 id="安全基线：为什么它不敢-确定"><a href="#安全基线：为什么它不敢-确定" class="headerlink" title="安全基线：为什么它不敢「确定」"></a>安全基线：为什么它不敢「确定」</h2>
+                <ul>
+                  <li><strong>规则先于 LLM</strong>：检测路径确定性执行，不经过任何模型调用；</li>
+                  <li><strong>置信度上限 0.9</strong>：规则引擎从不声称「确定」，专家标注的模式显式标记为未验证；</li>
+                  <li><strong>replay-verified ≠ simulated</strong>：只有基于真实日志、量化出节省的回放才算 verified；</li>
+                  <li><strong>写操作在人审之后</strong>：自动应用默认关闭，仅限 replay-verified 且达置信度上限的修复，且每一条都进台账供审计；</li>
+                  <li><strong>两层诚实</strong>：keyless 快照证明的是 pipeline；「真实模型自然绕路」的涌现性证明需要带 key 运行，文档按配方说明、绝不声称已验证。</li>
+                </ul>
+
+                <h2 id="验证：140-个测试与-keyless-快照"><a href="#验证：140-个测试与-keyless-快照" class="headerlink" title="验证：140 个测试与 keyless 快照"></a>验证：140 个测试与 keyless 快照</h2>
+                <p>独立性是第一位的：仓库 clone 下来 <code>pnpm install</code> 即可复现——<strong>typecheck 全绿、140 个测试全过</strong>（detector 35 / advisor 54 / apply 35 / tool 10，覆盖规则折叠、回放验证、台账、沉淀重载等）。</p>
+                <p>端到端还有一个 <strong>keyless 快照</strong>（<code>examples/headless-agent/loop-doctor.cordis.snapshot.yml</code>）：用一个确定性后端在真实 harness 循环里强制制造三次真实弯路，然后在快照内断言完整链路——信号 → 建议 → 台账 → 人工批准 → 沉淀 → 第二次诊断「看见」已采纳修复 → auto-apply 与 reload 闭环。不需要任何 API key 就能复现整条流水线。</p>
+
+                <h2 id="上手"><a href="#上手" class="headerlink" title="上手"></a>上手</h2>
+                <pre><code>git clone https://github.com/Hubert-hwk/dsh-loop-doctor.git
+cd dsh-loop-doctor
+pnpm install
+pnpm run typecheck   # tsc 全家族
+pnpm test            # 140 tests</code></pre>
+                <p>四个包本就按 harness 单体仓库的 workspace 包编写，未来上游开放贡献时可以直接 rebase 回去。</p>
+
+                <h2 id="开源与社区"><a href="#开源与社区" class="headerlink" title="开源与社区"></a>开源与社区</h2>
+                <p>这个家族最初是作为对 <a href="https://github.com/deepseek-ai/deepseek-harness" target="_blank" rel="noopener">deepseek-ai/deepseek-harness</a> 的上游贡献写的，但官方目前不接受外部 PR（见其 <a href="https://github.com/deepseek-ai/deepseek-harness/blob/master/CONTRIBUTING.md" target="_blank" rel="noopener">CONTRIBUTING.md</a>），所以先以社区独立仓库的形式开源，让想用的人用得上、想讨论的人有地方讨论：</p>
+                <ul>
+                  <li>仓库：<a href="https://github.com/Hubert-hwk/dsh-loop-doctor" target="_blank" rel="noopener">Hubert-hwk/dsh-loop-doctor</a>（<code>dsh-plugin</code> topic）；</li>
+                  <li>社区帖：DeepSeek Harness <a href="https://github.com/deepseek-ai/deepseek-harness/discussions" target="_blank" rel="noopener">GitHub Discussions</a> 的 Show Your Plugins! 分类；</li>
+                  <li>设计笔记：仓库内的 <code>Agent Note</code>（.agents/notes/implemented/feature/2026-08-19-loop-doctor-self-diagnosis）。</li>
+                </ul>
+                <p>我一直觉得，「让系统看见自己」是 Agent 工程里被低估的一环——日志不是写来存档的，是写来被读的。如果你也在做类似的观测、诊断、自优化方向，欢迎到 Discussions 或 GitHub 上一起聊。</p>
+</div>
+              <nav class="post-nav">
+                <a class="post-nav__back" href="/">← 返回首页</a>
+                <a class="post-nav__next" href="/2026/08/14/agent-self-evolution-flywheel/">上一篇：我把 Agent 自进化飞轮拆成了四件事 →</a>
+              </nav>
+            </div>
+          </article>
+        </div>
+  <aside class="post-toc" id="postTocPanel" aria-label="文章目录">
+    <div class="post-toc__inner">
+    <p class="post-toc__title">本文目录 <button class="post-toc__close" id="postTocClose" aria-label="关闭目录"><i class="ri-close-line"></i></button></p>
+    <ol>
+      <li class="lvl-2"><a data-target="核心思路：观察在前-建议在中-写入在后" href="#核心思路：观察在前-建议在中-写入在后">核心思路：观察在前、建议在中、写入在后</a></li>
+      <li class="lvl-2"><a data-target="四个包：detector-advisor-apply-tool-diagnose" href="#四个包：detector-advisor-apply-tool-diagnose">四个包：detector / advisor / apply / tool-diagnose</a></li>
+      <li class="lvl-3"><a data-target="detector：确定性规则-不调用-llm" href="#detector：确定性规则-不调用-llm">detector：确定性规则，不调用 LLM</a></li>
+      <li class="lvl-3"><a data-target="advisor：回放验证" href="#advisor：回放验证">advisor：回放验证</a></li>
+      <li class="lvl-3"><a data-target="apply：写入面" href="#apply：写入面">apply：写入面</a></li>
+      <li class="lvl-3"><a data-target="tool：模型面" href="#tool：模型面">tool：模型面</a></li>
+      <li class="lvl-2"><a data-target="安全基线：为什么它不敢-确定" href="#安全基线：为什么它不敢-确定">安全基线：为什么它不敢「确定」</a></li>
+      <li class="lvl-2"><a data-target="验证：140-个测试与-keyless-快照" href="#验证：140-个测试与-keyless-快照">验证：140 个测试与 keyless 快照</a></li>
+      <li class="lvl-2"><a data-target="上手" href="#上手">上手</a></li>
+      <li class="lvl-2"><a data-target="开源与社区" href="#开源与社区">开源与社区</a></li>
+    </ol>
+    </div>
+  </aside>
+      </section>
+      <footer class="footer">
+        <div class="outer"><ul><li>Copyrights &copy; 2024-2026 <i class="ri-heart-fill heart_icon"></i> Hwk</li></ul></div>
+      </footer>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+      <nav class="navbar">
+        <div class="logo"><a href="/"><img src="/images/ayer-side.svg" alt="Hubert Blog"></a></div>
+        <ul class="nav nav-main">
+          <li class="nav-item"><a class="nav-item-link" href="/">首页</a></li>
+          <li class="nav-item"><a class="nav-item-link" href="/archives">归档</a></li>
+          <li class="nav-item"><a class="nav-item-link" href="/about/hwk.html">关于我</a></li>
+          <li class="nav-item"><a class="nav-item-link" href="https://github.com/Hubert-hwk" target="_blank" rel="noopener">GitHub</a></li>
+        </ul>
+        <ul class="nav nav-main" style="margin-top:1.6rem;border-top:1px solid #eef1f6;padding-top:1rem">
+          <li class="nav-item"><span class="post-dark" id="postDark" title="切换深浅色模式"><i class="ri-moon-line"></i></span></li>
+        </ul>
+      </nav>
+    </aside>
+  </div>
+  <button class="post-toc-fab" id="postTocFab" aria-label="目录" title="展开 / 收起目录"><i class="ri-list-unordered"></i></button>
+
+  <script src="/js/particles.js"></script>
+  <script>
+    (function () {
+      // 移动端侧栏开关
+      var toggle = document.querySelector('.navbar-toggle');
+      if (toggle) {
+        toggle.addEventListener('click', function () {
+          document.querySelector('.content').classList.toggle('on');
+          document.querySelector('.sidebar').classList.toggle('on');
+        });
+      }
+      // 深浅色切换（与站点其他页面共用 sessionStorage 约定）
+      var darkBtn = document.getElementById('postDark');
+      var applyDark = function (on) {
+        document.body.classList.toggle('darkmode', on);
+        var i = darkBtn.querySelector('i');
+        i.classList.toggle('ri-moon-line', !on);
+        i.classList.toggle('ri-sun-line', on);
+      };
+      if (darkBtn) {
+        darkBtn.addEventListener('click', function () {
+          var on = !document.body.classList.contains('darkmode');
+          applyDark(on);
+          if (on) { sessionStorage.setItem('darkmode', 1); } else { sessionStorage.removeItem('darkmode'); }
+        });
+        applyDark(sessionStorage.getItem('darkmode') === '1');
+      }
+      // 阅读进度条（.content 是滚动容器）
+      var scroller = document.querySelector('.content');
+      var bar = document.getElementById('postProgress');
+      var update = function () {
+        var max = scroller.scrollHeight - scroller.clientHeight;
+        var p = max > 0 ? scroller.scrollTop / max : 0;
+        bar.style.width = (p * 100).toFixed(2) + '%';
+      };
+      if (scroller && bar) {
+        document.addEventListener('scroll', update, { passive: true, capture: true });
+        window.addEventListener('resize', update);
+        update();
+      }
+      // 右侧悬浮目录：展开 / 收起
+      var fab = document.getElementById('postTocFab');
+      var panel = document.getElementById('postTocPanel');
+      var tocClose = document.getElementById('postTocClose');
+      var setToc = function (open) {
+        panel.classList.toggle('open', open);
+        fab.classList.toggle('open', open);
+        document.body.classList.toggle('toc-open', open);
+        fab.querySelector('i').className = open ? 'ri-close-line' : 'ri-list-unordered';
+      };
+      if (fab && panel) {
+        fab.addEventListener('click', function () {
+          setToc(!panel.classList.contains('open'));
+        });
+        if (tocClose) {
+          tocClose.addEventListener('click', function () { setToc(false); });
+        }
+      }
+      // 滚动高亮当前章节 + 点击平滑跳转
+      var headings = Array.prototype.slice.call(document.querySelectorAll('.article-entry h2, .article-entry h3'));
+      var tocLinks = Array.prototype.slice.call(document.querySelectorAll('.post-toc a[data-target]'));
+      var spy = function () {
+        if (!scroller || !tocLinks.length) return;
+        var cTop = scroller.getBoundingClientRect().top + 150;
+        var current = null;
+        for (var i = 0; i < headings.length; i++) {
+          if (headings[i].getBoundingClientRect().top <= cTop) { current = headings[i]; } else { break; }
+        }
+        tocLinks.forEach(function (a) {
+          a.classList.toggle('active', !!current && a.getAttribute('data-target') === current.id);
+        });
+      };
+      if (scroller && tocLinks.length) {
+        document.addEventListener('scroll', spy, { passive: true, capture: true });
+        window.addEventListener('resize', spy);
+        tocLinks.forEach(function (a) {
+          a.addEventListener('click', function (e) {
+            e.preventDefault();
+            var target = document.getElementById(a.getAttribute('data-target'));
+            if (target) {
+              scroller.scrollTo({ top: target.offsetTop - 100, behavior: 'smooth' });
+            }
+          });
+        });
+        spy();
+      }
+    })();
+  </script>
+</body>
+</html>

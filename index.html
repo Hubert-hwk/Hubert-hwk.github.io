@@ -135,11 +135,11 @@
 </style>
 
 <section class="featured-post" aria-labelledby="featured-post-title">
-  <a class="featured-post__link" href="/2026/08/14/agent-self-evolution-flywheel/">
+  <a class="featured-post__link" href="/2026/08/20/dsh-loop-doctor/">
     <div class="featured-post__body">
-      <p class="featured-post__eyebrow">最新文章 · 2026-08-14</p>
-      <h2 id="featured-post-title">我把 Agent 自进化飞轮拆成了四件事：评测、记忆、落地、控制</h2>
-      <p>从「能跑」到「会进化」——评测、记忆、Self-Improve 不该被拆散着做。这篇笔记把 Agent 自进化的完整工程闭环拆成四个齿轮，讲清楚它们怎么咬合、怎么落地、怎么不跑偏。</p>
+      <p class="featured-post__eyebrow">最新文章 · 2026-08-20</p>
+      <h2 id="featured-post-title">我把 DeepSeek Harness 的日志变成了 Agent 的自诊断医生：loop-doctor 插件家族开源</h2>
+      <p>日志不是写来存档的，是写来被读的。loop-doctor 让 DeepSeek Harness 读自己的 SessionEvent 日志做自诊断——确定性弯路检测、回放验证的建议、人审之后的修复沉淀。</p>
       <span class="featured-post__more">阅读全文 →</span>
     </div>
     <div class="featured-post__badge"><i class="ri-refresh-line"></i></div>
@@ -166,26 +166,45 @@
       </div>
       <span class="github-project__stack">Python · FastAPI · LangGraph · GraphRAG</span>
     </a>
-    <a class="github-project" href="https://github.com/Hubert-hwk/duckcoding-daily-checkin" target="_blank" rel="noopener">
+        <a class="github-project" href="https://github.com/Hubert-hwk/dsh-loop-doctor" target="_blank" rel="noopener">
       <div>
-        <h3>DuckCoding daily check-in</h3>
-        <p>复用本地浏览器登录态完成每日签到，并通过 Windows 计划任务实现自动运行。</p>
+        <h3>dsh-loop-doctor</h3>
+        <p>DeepSeek Harness 自诊断插件家族：读 SessionEvent 日志做弯路检测，回放验证的建议，人审后的修复沉淀。</p>
       </div>
-      <span class="github-project__stack">Node.js · Playwright · Windows</span>
+      <span class="github-project__stack">TypeScript · Cordis · DeepSeek Harness</span>
     </a>
-    <a class="github-project" href="https://github.com/Hubert-hwk/Contract-Risk-Review-Assistant" target="_blank" rel="noopener">
-      <div>
-        <h3>Contract Risk Review Assistant</h3>
-        <p>围绕合同风险审查助手继续探索 AI 在专业场景中的落地方式。</p>
-      </div>
-      <span class="github-project__stack">AI 应用 · 风险审查</span>
-    </a>
+
   </div>
   <a class="github-showcase__more" href="/2026/08/02/github-project-update/">阅读这次 GitHub 近况更新 →</a>
 </section>
   
   <article class="articles">
-    <article
+        <article
+  id="post-dsh-loop-doctor"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    <header class="article-header">
+      <h2 itemprop="name">
+        <a class="article-title" href="/2026/08/20/dsh-loop-doctor/">我把 DeepSeek Harness 的日志变成了 Agent 的自诊断医生：loop-doctor 插件家族开源</a>
+      </h2>
+    </header>
+    <div class="article-meta">
+      <a href="/2026/08/20/dsh-loop-doctor/" class="article-date">
+        <time datetime="2026-08-20T00:00:00.000Z" itemprop="datePublished">2026-08-20</time>
+      </a>
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      <p>DeepSeek Harness 把每次运行事实写进 SessionEvent 日志，却没人读。loop-doctor 让 harness 读自己的日志做自诊断：确定性 detour 检测、回放验证的建议、人审后的修复沉淀，140 个测试全绿，已开源。</p>
+      <p><a href="/2026/08/20/dsh-loop-doctor/">继续阅读 →</a></p>
+    </div>
+  </div>
+</article>
+
+<article
   id="post-agent-self-evolution-flywheel"
   class="article article-type-post"
   itemscope
