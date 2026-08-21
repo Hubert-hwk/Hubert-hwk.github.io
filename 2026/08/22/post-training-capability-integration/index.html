@@ -22,7 +22,7 @@
       <header class="article-header post-hero"><p class="post-hero__eyebrow">LLM 后训练 · 工业方法论</p>
         <h1 class="article-title" itemprop="name">把数学、代码、对话和工具装进一个基模：后训练能力整合的四条路线</h1>
         <p class="post-hero__sub">单项能力可以各自刷到很强；难的是让它们住进同一个模型后，仍然不互相挤掉。这篇从“总装厂”视角，拆解 Mixed RL、Cascade RL、参数合并与多教师 MOPD。</p>
-        <div class="post-hero__meta"><span class="post-hero__meta-item"><i class="ri-calendar-line"></i>2026-08-22</span><span class="post-hero__meta-item"><i class="ri-file-text-line"></i>约 4200 字</span><span class="post-hero__meta-item"><i class="ri-time-line"></i>阅读约 11 分钟</span><span class="post-hero__tag">RL</span><span class="post-hero__tag">后训练</span><span class="post-hero__tag">MOPD</span></div>
+        <div class="post-hero__meta"><span class="post-hero__meta-item"><i class="ri-calendar-line"></i>2026-08-22</span><span class="post-hero__meta-item"><i class="ri-file-text-line"></i>约 6200 字</span><span class="post-hero__meta-item"><i class="ri-time-line"></i>阅读约 16 分钟</span><span class="post-hero__tag">RL</span><span class="post-hero__tag">后训练</span><span class="post-hero__tag">MOPD</span></div>
       </header>
       <div class="article-entry" itemprop="articleBody">
         <figure class="post-visual"><img src="/images/post-training-capability-integration.png" alt="数学、代码、通用对话和工具调用四条能力流汇聚到同一个大模型核心" /><figcaption>同一个基模，最后要承接四种完全不同的“工作语言”。</figcaption></figure>
@@ -38,15 +38,27 @@
         <h2 id="路线一：mixed-rl——让所有车间同时开工">路线一：Mixed RL——让所有车间同时开工</h2>
         <p>Mixed RL 的想法最直观：从不同领域抽样，同一个 batch 内各算各的 reward 和 advantage，然后联合更新一个模型。它像四个车间同时往总装线送零件，吞吐量高，也天然能保持模型“什么都见过”。</p>
         <p>问题在于，总装线只有一套参数。一个 batch 刚鼓励模型多做步骤，另一个 batch 可能鼓励它直接回答；一个领域的更新会削弱另一个领域。MOPD 论文将这种现象概括为 see-saw：整体均衡，但往往达不到每位领域专家的峰值。</p>
+        <h3>训练时到底在混什么？</h3>
+        <p>不是把所有样本塞进一个文本桶就结束了。工程上，每个领域仍有独立的 prompt 池、rollout 引擎、环境或 verifier，以及自己的 reward。第 <em>d</em> 个领域以概率 <em>p<sub>d</sub></em> 被采样，得到优势 <em>A<sub>d</sub></em> 后，共享同一组参数 <em>θ</em> 更新。可以把总目标理解为：<span class="inline-formula">Σ<sub>d</sub> p<sub>d</sub> · E[RL loss<sub>d</sub>]</span>。</p>
+        <p>真正难的不是写出这个加权和，而是让每一项<strong>可比较</strong>：数学 reward 常接近 0/1，偏好模型的分数可能是连续值，Agent 任务一次 rollout 又比普通问答贵一个数量级。如果不做领域内 advantage 归一化、长度控制和采样配额，优化器会被“分数尺度大、样本又便宜”的任务支配，看起来总 loss 在降，某个关键能力却在悄悄掉。</p>
+        <div class="route-detail"><b>面试时该怎么说工程抓手？</b><ul><li>先按领域独立做 reward/advantage 标准化，不直接比较原始奖励；</li><li>按 token、rollout 成本和业务优先级设采样预算，而不只按样本条数混比；</li><li>维护每个领域的在线 regression 曲线；一旦某域连续回落，检查梯度夹角、长度分布和奖励 hack。</li></ul></div>
         <div class="interview"><p>面试常问：<strong>Mixed RL 和多任务学习有什么本质区别？</strong></p><p><b>回答：</b>多任务学习描述的是“任务一起学”；Mixed RL 特指多任务仍保留各自的 rollout、奖励和 advantage，再混入联合 RL 更新。难点不只是数据比例，更是不同奖励尺度、采样成本与梯度方向如何协调。</p></div>
 
         <h2 id="路线二：cascade-rl——排队进总装线">路线二：Cascade RL——排队进总装线</h2>
         <p>如果同时训练会打架，一个自然想法是排队：先把指令遵循训好，再训练数学，最后训练软件工程。这就是 Cascade RL。它的优势是每一阶段更稳定、调参更专注；代价是模型没有“只学不忘”的能力。</p>
         <p>它像给一位员工轮岗：最后一个岗位学得最热，但前两个岗位的手感会慢慢生疏。MOPD 的受控实验中，按指令遵循→数学→软件工程串行训练时，数学能力会在后续软件工程阶段回落。这不是实现瑕疵，而是共享参数承载连续偏好的结构性代价。</p>
+        <h3>为什么顺序本身会变成超参数？</h3>
+        <p>第 <em>k</em> 阶段把参数从 <em>θ<sub>k-1</sub></em> 推到 <em>θ<sub>k</sub></em>，只看当前领域的奖励。除非你显式加入旧领域数据、旧模型 KL 约束或 replay buffer，否则目标函数里没有任何项要求旧能力仍然可用。于是“数学 → 代码”和“代码 → 数学”不是两次等价训练：后一个任务更接近最终模型，也更容易留下痕迹。</p>
+        <p>这也是 Cascade RL 在工程上仍有价值、却不适合作为终局整合方案的原因：它适合<strong>定位问题和快速验证</strong>。例如先让模型在稳定的指令格式上站住，再尝试工具 RL；但当你交付的是一个全能基模，必须把旧域回归评测当成每个 stage 的 release gate，而不是最后才跑一次大榜。</p>
+        <div class="interview"><p>面试追问：<strong>能不能靠 replay 或 KL 约束解决遗忘？</strong></p><p><b>回答：</b>可以缓解，但不是免费午餐。Replay 让旧领域重新进入梯度，KL 把新策略拴在旧 checkpoint 附近；前者增加采样与数据治理成本，后者会限制新能力探索。它们把 Cascade RL 往 Mixed RL 拉近，却仍保留串行依赖和顺序敏感性。要回答清楚：这是“遗忘缓解”，不是“独立专家的整合”。</p></div>
 
         <h2 id="路线三：model-merging——不训练，直接拼专家">路线三：Model Merging——不训练，直接拼专家</h2>
         <p>另一条路线干脆把训练和整合拆开：从同一个 SFT 起点各自训出数学、代码、对话专家，最后对 checkpoint 做平均、task arithmetic、TIES 或 DARE 等参数合并。优点极其诱人：整合阶段几乎不需要再 rollout，也不用重新走一轮昂贵 RL。</p>
         <p>但“权重平均”不是“能力平均”。同一个参数在两个专家中可能承担了不同功能；把 delta 相加后，生成行为会沿 token 自回归放大偏差。它更像把四位厨师各自改过的菜谱直接叠在一起：有时惊艳，有时把盐、火候和配比都搞乱。</p>
+        <h3>从公式看，它赌的是什么？</h3>
+        <p>设共同底座为 <em>θ<sub>0</sub></em>，领域专家为 <em>θ<sub>d</sub></em>，task vector 是 <em>Δ<sub>d</sub> = θ<sub>d</sub> − θ<sub>0</sub></em>。最常见的 task arithmetic 是：<span class="inline-formula">θ<sub>merge</sub> = θ<sub>0</sub> + Σ<sub>d</sub> α<sub>d</sub>Δ<sub>d</sub></span>。它隐含一个很强的假设：这些增量在参数空间足够接近线性，而且彼此不冲突。</p>
+        <p>TIES 一类方法会先裁掉幅度小的更新、再处理符号冲突；DARE 一类方法会随机稀疏化 delta，再重缩放。它们解决的是“不要让互相抵消的参数全部参与相加”，但无法保证两个专家在高层表征或长程行为上没有冲突。尤其是 RL 后的 policy 往往改变了输出长度、拒答边界、工具调用格式等全局行为，权重相加比 SFT 后的局部任务迁移更脆弱。</p>
+        <div class="route-detail"><b>把 merge 当作工程实验，而不是算法名：</b><ul><li>只合并同一初始 checkpoint、相同 tokenizer 和架构的专家；</li><li>在 hold-out suite 上搜索 <em>α</em>，并单列安全、格式、长轨迹和工具调用回归；</li><li>保留每个专家与合并模型的可复现 checkpoint，失败时能快速退回，而不是继续在坏模型上补丁式微调。</li></ul></div>
         <div class="interview"><p>面试常问：<strong>什么时候会优先考虑 Model Merging？</strong></p><p><b>回答：</b>当专家来自同一底座、任务改动相对局部、没有预算重做整合训练，并且能严格回归测试时。它是低成本工程杠杆，不是无条件替代后训练；尤其要单独评估安全、拒答和长轨迹行为。</p></div>
 
         <h2 id="路线四：mopd——先培养专家，再让学生走自己的路">路线四：MOPD——先培养专家，再让学生走自己的路</h2>
@@ -54,6 +66,31 @@
         <figure class="post-diagram"><div class="diagram-row"><span>通用 SFT</span><i>→</i><span>数学 RL 专家</span><span>代码 RL 专家</span><span>对话 RL 专家</span><span>工具 RL 专家</span><i>→</i><strong>学生自己的 rollout<br>按任务路由到教师<br>token 级反向 KL</strong><i>→</i><b>统一基模</b></div><figcaption>不是把教师权重搅在一起，而是让学生在自己会走到的状态里，向正确的专家学习。</figcaption></figure>
         <p>“on-policy”是关键。传统离线蒸馏让学生背教师已经写好的答案；可学生上线后会走出不同前缀，一旦偏离，训练时从没见过的状态就出现了。MOPD 反过来：学生先走，教师再点评这条路上每一步更应该押哪个 token。它把稀疏的终局奖励，变成密集的逐 token 导航。</p>
         <p>在 Qwen3-30B-A3B 的三领域受控比较中，论文报告 MOPD 的归一化整合分数为 0.937，优于最强的 Mixed RL 基线 0.882；并进一步用于 MiMo-V2-Flash，覆盖数学、代码、指令遵循、软件工程和工具使用。这里最重要的不是一个分数，而是组织方式：领域专家可以并行生产，整合阶段再统一进行。</p>
+
+        <h3>把一次 MOPD 更新拆成五步</h3>
+        <ol class="process-list"><li><b>共同起点：</b>先做覆盖所有目标能力的通用 SFT，得到 <em>θ<sub>SFT</sub></em>。它既是所有专家的起点，也是最终学生的起点。</li><li><b>并行炼专家：</b>数学教师用可验证答案 RL，SWE 教师在可执行 sandbox 中做 agent RL，指令教师用 rubric/偏好信号；每条线可独立试 reward、环境和超参。</li><li><b>学生自己 rollout：</b>对一个已标注领域的 prompt <em>x</em>，学生 <em>π<sub>θ</sub></em> 生成 <em>y</em>。这条可能走歪的轨迹，恰恰是它上线时会遇到的状态。</li><li><b>按域路由并打分：</b>把 <em>(x, y&lt;t)</em> 这个学生前缀送给对应冻结教师 <em>π<sub>φd</sub></em>，教师在每个位置给出“下一个 token 更偏好什么”的概率或 log-prob。</li><li><b>更新学生，不更新教师：</b>最小化学生策略与教师策略在<strong>学生轨迹</strong>上的反向 KL；教师只是高密度评分器，最终线上只保留学生。</li></ol>
+
+        <h3>反向 KL 和 token 级优势，到底在优化什么？</h3>
+        <p>概念上，MOPD 希望在学生采样到的前缀上，让 <em>π<sub>θ</sub>(·|x,y&lt;t)</em> 靠近对应教师 <em>π<sub>φd</sub>(·|x,y&lt;t)</em>，即最小化 <span class="inline-formula">D<sub>KL</sub>(π<sub>θ</sub> || π<sub>φd</sub>)</span>。注意方向：前缀由学生自己产生，所以这是在学生的状态分布上提问“教师会怎么选”，而不是拿一条教师写好的标准答案让学生背。</p>
+        <p>在 policy-gradient 实现里，逐 token 的蒸馏优势可写成：<span class="inline-formula">Â<sub>t</sub> = stopgrad[log π<sub>teacher</sub>(y<sub>t</sub>) − log π<sub>student</sub>(y<sub>t</sub>)]</span>。学生已选出的 token 如果是教师也更愿意选的，差距小；如果教师认为这个 token 很差，更新就会把学生往别处推。人话版：终局 reward 只说“这题 0 分”，而老师在每一步标出“从这一步开始，你更该写什么”。</p>
+        <div class="post-callout"><strong>一个容易答错的点：</strong>MOPD 不是让教师重写学生答案，也不是多个教师在推理时投票。教师对<strong>同一条学生前缀</strong>进行 teacher-forced 评分；多教师的作用是按任务域提供最合适的局部偏好。</div>
+
+        <h3>为什么“同源教师”不是实现细节，而是稳定性条件？</h3>
+        <p>论文强调所有专家从同一个 SFT checkpoint 出发，学生也从它出发。这样在蒸馏开始时，学生和教师的 token 分布不会相隔太远，教师在学生异常前缀上的评分仍然有意义，KL 也不会一上来爆炸。如果拿一个完全不同家族的超强模型直接当教师，它可能在学生产生的怪前缀上给出极尖锐、但不可学习的分布；这会造成训练不稳，或只学到表面格式。</p>
+        <p>这也解释了 MOPD 的边界：它更像“把同一工厂孵化出的多位专家装回一个学生”，不是任意模型 API 的万能融合器。跨家族蒸馏当然能做，但应额外处理 tokenizer、能力鸿沟、温度、数据桥接和对齐目标，而不能把它直接等同于论文里的稳定结论。</p>
+
+        <h3>实验数字应该怎样读，而不是只背 0.937？</h3>
+        <div class="table-scroll"><table><thead><tr><th>方法</th><th>归一化整合分</th><th>它暴露的短板</th><th>面试里的正确解读</th></tr></thead><tbody>
+          <tr><td>Mixed RL</td><td>0.882</td><td>整体均衡，但达不到专家峰值</td><td>端到端基线强，难点是跨域梯度干扰</td></tr>
+          <tr><td>Cascade RL</td><td>0.775</td><td>训练顺序造成遗忘</td><td>stage 稳定，不代表最终多能力最优</td></tr>
+          <tr><td>Off-policy Finetune</td><td>0.824</td><td>离线教师轨迹与学生推理分布不匹配</td><td>有密集监督，但有 exposure bias</td></tr>
+          <tr><td>Task Arithmetic</td><td>0.857</td><td>对系数和领域高度敏感</td><td>适合低成本试验，不可省略回归</td></tr>
+          <tr><td><strong>MOPD</strong></td><td><strong>0.937</strong></td><td>仍有教师服务与路由成本</td><td>同一实验设置下最接近各域专家的整合</td></tr>
+        </tbody></table></div>
+        <p>这个归一化分数不是准确率平均：0 表示只达到初始 SFT 学生，1 表示达到各自领域 RL 教师，按领域分别计算“补上了多少学生到教师的差距”再平均。因此 0.937 的更准确说法是：在论文这组三领域和设置里，MOPD 平均补上了约 93.7% 的能力差距；不是“比教师强 93.7%”，也不是任意任务都提升 5.5 个绝对准确率点。</p>
+
+        <h3>真正落地时，多出来的是一套系统</h3>
+        <div class="route-detail"><b>一个可执行的 MOPD 设计评审清单：</b><ul><li><strong>路由：</strong>prompt 的领域标签从哪里来？边界问题（例如“用工具查资料再写代码”）是单教师、分段教师还是专门的 agent 教师？路由错了怎么兜底？</li><li><strong>吞吐：</strong>学生 rollout 后，教师必须对每个 token 的前缀 prefill 打分；训练集群要做教师 worker、批处理、KV cache 和异步队列，否则教师服务会成为瓶颈。</li><li><strong>质量门禁：</strong>每轮教师先过本域绝对门槛再接入；学生则同时看每域能力、拒答/安全、格式和多轮工具轨迹，不能只看总分。</li><li><strong>版本：</strong>记录 SFT 父 checkpoint、每位教师版本、域数据版本和路由规则；MOPD 的可回滚单位不是“一个模型”，而是一套专家组合。</li></ul></div>
 
         <h2 id="一张表选路线">一张表选路线</h2>
         <div class="table-scroll"><table><thead><tr><th>路线</th><th>能力在哪里汇合</th><th>最大优点</th><th>典型风险</th><th>更适合谁</th></tr></thead><tbody>
@@ -66,11 +103,13 @@
         <h2 id="别把-mopd-当成万能答案">别把 MOPD 当成万能答案</h2>
         <p>它有明确前提：教师和学生最好同源，否则初始分布差得太远，教师在学生轨迹上的评价会变得不可靠；同时，系统必须为多位教师提供高吞吐推理，路由、KV cache 与训练调度都更复杂。更现实的是，论文的工业部署证据来自作者团队，跨模型家族、跨奖励体系的可复现性仍值得继续观察。</p>
         <div class="interview"><p>面试常问：<strong>MOPD 为什么不直接让多个教师投票？</strong></p><p><b>回答：</b>它不是对同一道题做 ensemble。每个 prompt 先按领域路由给对应教师；目标是把专家能力压缩进同一个学生，而不是推理时永久挂着多个模型。多教师在这里是“训练时的模块化生产线”，不是“上线时的模型集群”。</p></div>
+        <div class="interview"><p>面试常问：<strong>MOPD 和“专家生成数据、学生做 SFT”相比，最关键的差异是什么？</strong></p><p><b>回答：</b>差异不在于有没有教师，而在监督落在哪个分布。离线 SFT 在教师轨迹上拟合 token，学生一旦在推理中偏离前缀，就会进入没训练过的状态；MOPD 让学生先 rollout，再让教师在这条前缀上逐 token 打分。因此它同时获得密集信号与 on-policy 分布匹配，代价是训练时必须在线跑教师。</p></div>
+        <div class="interview"><p>面试追问：<strong>教师已经很强，为什么不直接部署多模型路由，而要蒸馏回一个学生？</strong></p><p><b>回答：</b>在线路由也可行，尤其适合能力差异很大、模型可独立演进的产品；但它会带来多模型显存、冷启动、尾延迟、版本组合和跨域任务编排成本。MOPD 是把复杂性前移到训练期，用一次整合换取线上单模型的成本与一致性。选择取决于流量、延迟 SLO 和能力更新频率，不是算法优劣的单选题。</p></div>
 
         <h2 id="收束：后训练正在从练一个模型变成经营一条生产线">收束：后训练正在从“练一个模型”变成“经营一条生产线”</h2>
         <p>Mixed RL、Cascade RL、Model Merging 和 MOPD 共同说明了一件事：后训练的中心问题已经不只是优化器选 PPO、GRPO 还是 DPO，而是如何管理一组专长不同、奖励不同、迭代速度不同的能力生产线。</p>
         <p>真正成熟的工业路线，往往不是押注某个万能算法，而是把<strong>专家生产、评测门禁、能力整合和回归测试</strong>设计成可拆、可并行、可回滚的系统。模型不是总装线的终点；它是下一轮专家训练共同回到的底座。</p>
-        <h2 id="参考资料">参考资料</h2><ol class="post-references"><li><a href="https://arxiv.org/abs/2606.30406" target="_blank" rel="noopener">MOPD: Multi-Teacher On-Policy Distillation for Capability Integration in LLM Post-Training</a>，2026。</li><li><a href="https://arxiv.org/abs/2506.03569" target="_blank" rel="noopener">MiMo-VL Technical Report</a>，2025。</li><li><a href="https://arxiv.org/abs/2508.18265" target="_blank" rel="noopener">InternVL3.5</a>，2025。</li><li><a href="https://arxiv.org/abs/2501.12948" target="_blank" rel="noopener">DeepSeek-R1</a>，2025。</li></ol>
+        <h2 id="参考资料">参考资料</h2><ol class="post-references"><li><a href="https://arxiv.org/abs/2606.30406" target="_blank" rel="noopener">MOPD: Multi-Teacher On-Policy Distillation for Capability Integration in LLM Post-Training</a>，2026。本文关于四类基线、三阶段流程、归一化分数和局限的主要来源。</li><li><a href="https://arxiv.org/abs/2505.09388" target="_blank" rel="noopener">Qwen3 Technical Report</a>，2025。多阶段后训练、通用 RL 与 on-policy distillation 的工业背景。</li><li><a href="https://arxiv.org/abs/2601.02780" target="_blank" rel="noopener">MiMo-V2-Flash Technical Report</a>，2026。MOPD 的工业级能力整合实践。</li><li><a href="https://arxiv.org/abs/2306.08543" target="_blank" rel="noopener">MiniLLM: Knowledge Distillation of Large Language Models</a>，2023。on-policy / reverse-KL 蒸馏的理论脉络。</li><li><a href="https://arxiv.org/abs/2212.04089" target="_blank" rel="noopener">Editing Models with Task Arithmetic</a>，2022。task vector 与参数合并的基本表达。</li><li><a href="https://docs.nvidia.com/nemo/rl/latest/design-docs/algorithms/mopd.html" target="_blank" rel="noopener">NVIDIA NeMo RL: MOPD</a>。公开训练框架中 token 级蒸馏优势的实现说明。</li></ol>
       </div></div></article></div></section>
     <footer class="footer"><div class="outer"><ul><li>Copyrights &copy; 2024-2026 <i class="ri-heart-fill heart_icon"></i> Hwk</li></ul></div></footer>
   </main><aside class="sidebar on"><button class="navbar-toggle"></button><nav class="navbar"><div class="logo"><a href="/"><img src="/images/ayer-side.svg" alt="Hubert Blog"></a></div><ul class="nav nav-main"><li class="nav-item"><a class="nav-item-link" href="/">首页</a></li><li class="nav-item"><a class="nav-item-link" href="/archives">归档</a></li><li class="nav-item"><a class="nav-item-link" href="/about/hwk.html">关于我</a></li><li class="nav-item"><a class="nav-item-link" href="https://github.com/Hubert-hwk" target="_blank" rel="noopener">GitHub</a></li></ul></nav></aside></div>
