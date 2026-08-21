@@ -253,6 +253,74 @@ body {
   box-shadow: 0 1rem 2.4rem rgba(37, 99, 235, 0.35);
 }
 
+/* ---------- 阅读量 ---------- */
+.featured-post,
+.article-inner,
+.archive-article-inner,
+footer.footer .outer {
+  position: relative;
+}
+
+.article-view-count,
+.post-view-count,
+.site-view-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: #64748b;
+  font-size: 1.2rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.article-view-count i,
+.post-view-count i,
+.site-view-count i {
+  color: #3b82f6;
+  font-size: 1.35rem;
+}
+
+.article-inner > .article-view-count,
+.archive-article-inner > .article-view-count,
+.featured-post > .article-view-count {
+  position: absolute;
+  right: 1.8rem;
+  bottom: 1.25rem;
+  padding: 0.35rem 0.8rem;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(0.6rem);
+}
+
+.post-hero__meta .post-view-count,
+.article-header .post-view-count {
+  margin-left: 0.2rem;
+}
+
+.site-view-count {
+  width: fit-content;
+  margin: 1rem auto 0;
+  padding: 0.55rem 1.1rem;
+  border-radius: 999px;
+  background: rgba(219, 234, 254, 0.62);
+  color: #475569;
+}
+
+body.darkmode .article-view-count {
+  border-color: #334155;
+  background: rgba(15, 23, 42, 0.82);
+  color: #cbd5e1;
+}
+
+body.darkmode .post-view-count,
+body.darkmode .site-view-count {
+  color: #cbd5e1;
+}
+
+body.darkmode .site-view-count {
+  background: #172554;
+}
+
 @media (max-width: 768px) {
   .featured-post__link {
     flex-direction: column;
