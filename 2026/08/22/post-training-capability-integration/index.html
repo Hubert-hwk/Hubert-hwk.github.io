@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-hans">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="数学、代码、通用对话与工具调用，如何被整合到同一个大模型？从 Mixed RL、Cascade RL、参数合并到多教师 MOPD，拆解工业后训练的能力整合路线。" />
+  <title>把数学、代码、对话和工具装进一个基模：后训练能力整合的四条路线 | Hubert Blog</title>
+  <link rel="canonical" href="https://hubert-hwk.github.io/2026/08/22/post-training-capability-integration/" />
+  <meta property="og:type" content="article" /><meta property="og:locale" content="zh_CN" /><meta property="og:site_name" content="Hubert Blog" />
+  <meta property="og:title" content="把数学、代码、对话和工具装进一个基模：后训练能力整合的四条路线" />
+  <meta property="og:description" content="从 Mixed RL、Cascade RL、参数合并到多教师 MOPD，拆解工业后训练的能力整合路线。" />
+  <meta property="og:url" content="https://hubert-hwk.github.io/2026/08/22/post-training-capability-integration/" />
+  <meta property="og:image" content="https://hubert-hwk.github.io/images/post-training-capability-integration.png" />
+  <meta property="article:published_time" content="2026-08-22" /><meta name="twitter:card" content="summary_large_image" />
+  <link rel="shortcut icon" href="/favicon.ico" /><link rel="stylesheet" href="/dist/main.css" />
+  <link rel="stylesheet" href="/css/fonts/remixicon.css" /><link rel="stylesheet" href="/css/custom.css" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"把数学、代码、对话和工具装进一个基模：后训练能力整合的四条路线","datePublished":"2026-08-22","author":{"@type":"Person","name":"Hwk"},"image":"https://hubert-hwk.github.io/images/post-training-capability-integration.png","mainEntityOfPage":"https://hubert-hwk.github.io/2026/08/22/post-training-capability-integration/"}</script>
+</head>
+<body>
+  <div id="app"><main class="content on"><div class="post-progress"><span id="postProgress"></span></div>
+    <section class="outer post-layout"><div class="post-body"><article class="article article-type-post" itemscope itemprop="blogPost"><div class="article-inner">
+      <header class="article-header post-hero"><p class="post-hero__eyebrow">LLM 后训练 · 工业方法论</p>
+        <h1 class="article-title" itemprop="name">把数学、代码、对话和工具装进一个基模：后训练能力整合的四条路线</h1>
+        <p class="post-hero__sub">单项能力可以各自刷到很强；难的是让它们住进同一个模型后，仍然不互相挤掉。这篇从“总装厂”视角，拆解 Mixed RL、Cascade RL、参数合并与多教师 MOPD。</p>
+        <div class="post-hero__meta"><span class="post-hero__meta-item"><i class="ri-calendar-line"></i>2026-08-22</span><span class="post-hero__meta-item"><i class="ri-file-text-line"></i>约 4200 字</span><span class="post-hero__meta-item"><i class="ri-time-line"></i>阅读约 11 分钟</span><span class="post-hero__tag">RL</span><span class="post-hero__tag">后训练</span><span class="post-hero__tag">MOPD</span></div>
+      </header>
+      <div class="article-entry" itemprop="articleBody">
+        <figure class="post-visual"><img src="/images/post-training-capability-integration.png" alt="数学、代码、通用对话和工具调用四条能力流汇聚到同一个大模型核心" /><figcaption>同一个基模，最后要承接四种完全不同的“工作语言”。</figcaption></figure>
+        <p>想象你在运营一座模型总装厂：数学车间擅长判定答案对错，代码车间能跑测试，通用对话车间学习人类偏好，工具车间则在真实环境里反复试错。每个车间单独优化都不算难；真正棘手的是交付时只能推出<strong>一个</strong>模型。</p>
+        <p>这就是当下工业后训练最现实的问题：不是“能否把某项能力训出来”，而是<strong>能否把多项能力整合进一个基模，同时避免互相覆盖、遗忘或失真</strong>。</p>
+        <div class="post-callout"><strong>先给结论：</strong>四条路线的区别，不在于谁“更先进”，而在于能力在何处汇合——训练 batch、训练时间、权重空间，还是学生自己的生成轨迹。</div>
+
+        <h2 id="问题：为什么专家不能直接住在一起">问题：为什么专家不能直接住在一起？</h2>
+        <p>不同场景需要的奖励信号天生不同：数学偏好可验证的最终答案，软件工程依赖可执行 sandbox，通用对话看 rubric 或人类偏好，工具调用又要在环境里看长链路结果。把它们扔进一个训练循环，并不等于它们会友好合作。</p>
+        <div class="integration-map"><div><b>共同训练</b><span>同一时刻抢同一套参数</span></div><div><b>串行训练</b><span>后来的能力可能覆盖前面的</span></div><div><b>权重拼接</b><span>参数相加不保证行为相加</span></div><div class="integration-map__accent"><b>策略蒸馏</b><span>让学生在自己的轨迹上向专家学习</span></div></div>
+        <p>可以把模型参数想成一张共享白板：数学写下的“解题习惯”，可能正好擦掉对话写下的“简洁回答”；工具 agent 学到的长轨迹，也可能让普通问答变得拖沓。工程上，这分别表现为<strong>梯度冲突、灾难性遗忘和权重冲突</strong>。</p>
+
+        <h2 id="路线一：mixed-rl——让所有车间同时开工">路线一：Mixed RL——让所有车间同时开工</h2>
+        <p>Mixed RL 的想法最直观：从不同领域抽样，同一个 batch 内各算各的 reward 和 advantage，然后联合更新一个模型。它像四个车间同时往总装线送零件，吞吐量高，也天然能保持模型“什么都见过”。</p>
+        <p>问题在于，总装线只有一套参数。一个 batch 刚鼓励模型多做步骤，另一个 batch 可能鼓励它直接回答；一个领域的更新会削弱另一个领域。MOPD 论文将这种现象概括为 see-saw：整体均衡，但往往达不到每位领域专家的峰值。</p>
+        <div class="interview"><p>面试常问：<strong>Mixed RL 和多任务学习有什么本质区别？</strong></p><p><b>回答：</b>多任务学习描述的是“任务一起学”；Mixed RL 特指多任务仍保留各自的 rollout、奖励和 advantage，再混入联合 RL 更新。难点不只是数据比例，更是不同奖励尺度、采样成本与梯度方向如何协调。</p></div>
+
+        <h2 id="路线二：cascade-rl——排队进总装线">路线二：Cascade RL——排队进总装线</h2>
+        <p>如果同时训练会打架，一个自然想法是排队：先把指令遵循训好，再训练数学，最后训练软件工程。这就是 Cascade RL。它的优势是每一阶段更稳定、调参更专注；代价是模型没有“只学不忘”的能力。</p>
+        <p>它像给一位员工轮岗：最后一个岗位学得最热，但前两个岗位的手感会慢慢生疏。MOPD 的受控实验中，按指令遵循→数学→软件工程串行训练时，数学能力会在后续软件工程阶段回落。这不是实现瑕疵，而是共享参数承载连续偏好的结构性代价。</p>
+
+        <h2 id="路线三：model-merging——不训练，直接拼专家">路线三：Model Merging——不训练，直接拼专家</h2>
+        <p>另一条路线干脆把训练和整合拆开：从同一个 SFT 起点各自训出数学、代码、对话专家，最后对 checkpoint 做平均、task arithmetic、TIES 或 DARE 等参数合并。优点极其诱人：整合阶段几乎不需要再 rollout，也不用重新走一轮昂贵 RL。</p>
+        <p>但“权重平均”不是“能力平均”。同一个参数在两个专家中可能承担了不同功能；把 delta 相加后，生成行为会沿 token 自回归放大偏差。它更像把四位厨师各自改过的菜谱直接叠在一起：有时惊艳，有时把盐、火候和配比都搞乱。</p>
+        <div class="interview"><p>面试常问：<strong>什么时候会优先考虑 Model Merging？</strong></p><p><b>回答：</b>当专家来自同一底座、任务改动相对局部、没有预算重做整合训练，并且能严格回归测试时。它是低成本工程杠杆，不是无条件替代后训练；尤其要单独评估安全、拒答和长轨迹行为。</p></div>
+
+        <h2 id="路线四：mopd——先培养专家，再让学生走自己的路">路线四：MOPD——先培养专家，再让学生走自己的路</h2>
+        <p>MOPD 的全称是 <strong>Multi-Teacher On-Policy Distillation</strong>。它把“培养专家”和“装配能力”拆成两个阶段：先从同一个通用 SFT checkpoint 出发，分别用最适合本领域的 RL 训出专家；再让一个学生模型自己生成答案，并由与任务匹配的冻结教师在每个 token 上给出概率分布监督。</p>
+        <figure class="post-diagram"><div class="diagram-row"><span>通用 SFT</span><i>→</i><span>数学 RL 专家</span><span>代码 RL 专家</span><span>对话 RL 专家</span><span>工具 RL 专家</span><i>→</i><strong>学生自己的 rollout<br>按任务路由到教师<br>token 级反向 KL</strong><i>→</i><b>统一基模</b></div><figcaption>不是把教师权重搅在一起，而是让学生在自己会走到的状态里，向正确的专家学习。</figcaption></figure>
+        <p>“on-policy”是关键。传统离线蒸馏让学生背教师已经写好的答案；可学生上线后会走出不同前缀，一旦偏离，训练时从没见过的状态就出现了。MOPD 反过来：学生先走，教师再点评这条路上每一步更应该押哪个 token。它把稀疏的终局奖励，变成密集的逐 token 导航。</p>
+        <p>在 Qwen3-30B-A3B 的三领域受控比较中，论文报告 MOPD 的归一化整合分数为 0.937，优于最强的 Mixed RL 基线 0.882；并进一步用于 MiMo-V2-Flash，覆盖数学、代码、指令遵循、软件工程和工具使用。这里最重要的不是一个分数，而是组织方式：领域专家可以并行生产，整合阶段再统一进行。</p>
+
+        <h2 id="一张表选路线">一张表选路线</h2>
+        <div class="table-scroll"><table><thead><tr><th>路线</th><th>能力在哪里汇合</th><th>最大优点</th><th>典型风险</th><th>更适合谁</th></tr></thead><tbody>
+          <tr><td>Mixed RL</td><td>同一 batch</td><td>简单、端到端</td><td>梯度冲突、配比敏感</td><td>领域相近、统一奖励体系</td></tr>
+          <tr><td>Cascade RL</td><td>训练时间</td><td>阶段稳定、好定位问题</td><td>遗忘、顺序敏感</td><td>必须逐阶段上线的团队</td></tr>
+          <tr><td>Param Merge</td><td>权重空间</td><td>整合成本低、迭代快</td><td>参数干扰、安全漂移</td><td>同源专家、预算紧、评测强</td></tr>
+          <tr><td>MOPD</td><td>学生 rollout 的策略空间</td><td>密集监督、专家可并行</td><td>需保留教师、系统更复杂</td><td>多领域 RL 专家与工业级整合</td></tr>
+        </tbody></table></div>
+
+        <h2 id="别把-mopd-当成万能答案">别把 MOPD 当成万能答案</h2>
+        <p>它有明确前提：教师和学生最好同源，否则初始分布差得太远，教师在学生轨迹上的评价会变得不可靠；同时，系统必须为多位教师提供高吞吐推理，路由、KV cache 与训练调度都更复杂。更现实的是，论文的工业部署证据来自作者团队，跨模型家族、跨奖励体系的可复现性仍值得继续观察。</p>
+        <div class="interview"><p>面试常问：<strong>MOPD 为什么不直接让多个教师投票？</strong></p><p><b>回答：</b>它不是对同一道题做 ensemble。每个 prompt 先按领域路由给对应教师；目标是把专家能力压缩进同一个学生，而不是推理时永久挂着多个模型。多教师在这里是“训练时的模块化生产线”，不是“上线时的模型集群”。</p></div>
+
+        <h2 id="收束：后训练正在从练一个模型变成经营一条生产线">收束：后训练正在从“练一个模型”变成“经营一条生产线”</h2>
+        <p>Mixed RL、Cascade RL、Model Merging 和 MOPD 共同说明了一件事：后训练的中心问题已经不只是优化器选 PPO、GRPO 还是 DPO，而是如何管理一组专长不同、奖励不同、迭代速度不同的能力生产线。</p>
+        <p>真正成熟的工业路线，往往不是押注某个万能算法，而是把<strong>专家生产、评测门禁、能力整合和回归测试</strong>设计成可拆、可并行、可回滚的系统。模型不是总装线的终点；它是下一轮专家训练共同回到的底座。</p>
+        <h2 id="参考资料">参考资料</h2><ol class="post-references"><li><a href="https://arxiv.org/abs/2606.30406" target="_blank" rel="noopener">MOPD: Multi-Teacher On-Policy Distillation for Capability Integration in LLM Post-Training</a>，2026。</li><li><a href="https://arxiv.org/abs/2506.03569" target="_blank" rel="noopener">MiMo-VL Technical Report</a>，2025。</li><li><a href="https://arxiv.org/abs/2508.18265" target="_blank" rel="noopener">InternVL3.5</a>，2025。</li><li><a href="https://arxiv.org/abs/2501.12948" target="_blank" rel="noopener">DeepSeek-R1</a>，2025。</li></ol>
+      </div></div></article></div></section>
+    <footer class="footer"><div class="outer"><ul><li>Copyrights &copy; 2024-2026 <i class="ri-heart-fill heart_icon"></i> Hwk</li></ul></div></footer>
+  </main><aside class="sidebar on"><button class="navbar-toggle"></button><nav class="navbar"><div class="logo"><a href="/"><img src="/images/ayer-side.svg" alt="Hubert Blog"></a></div><ul class="nav nav-main"><li class="nav-item"><a class="nav-item-link" href="/">首页</a></li><li class="nav-item"><a class="nav-item-link" href="/archives">归档</a></li><li class="nav-item"><a class="nav-item-link" href="/about/hwk.html">关于我</a></li><li class="nav-item"><a class="nav-item-link" href="https://github.com/Hubert-hwk" target="_blank" rel="noopener">GitHub</a></li></ul></nav></aside></div>
+  <script src="/js/particles.js"></script><script>(function(){var t=document.querySelector('.navbar-toggle');if(t)t.addEventListener('click',function(){document.querySelector('.content').classList.toggle('on');document.querySelector('.sidebar').classList.toggle('on')});var s=document.querySelector('.content'),b=document.getElementById('postProgress');function u(){var m=s.scrollHeight-s.clientHeight;b.style.width=(m?s.scrollTop/m:0)*100+'%'}document.addEventListener('scroll',u,{passive:true,capture:true});u()})()</script>
+</body></html>

@@ -22,7 +22,8 @@
   var raf = 0;
   var t = 0;
 
-  var LINK = 150;
+  // 首页内容较多，背景只保留轻微的层次感，避免抢走正文注意力。
+  var LINK = 132;
   var LINK2 = LINK * LINK;
   var MOUSE_R = 130;      // 鼠标避让半径
   var REPEL_R = 26;       // 粒子间排斥半径
@@ -65,7 +66,7 @@
     canvas.style.height = H + 'px';
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    var count = Math.max(40, Math.min(120, Math.floor((W * H) / 16000)));
+    var count = Math.max(28, Math.min(72, Math.floor((W * H) / 26000)));
     particles = [];
     for (var i = 0; i < count; i++) {
       particles.push(newParticle());
@@ -143,7 +144,7 @@
         var dx = a.x - b.x, dy = a.y - b.y;
         var d2 = dx * dx + dy * dy;
         if (d2 < LINK2) {
-          var alpha = (1 - d2 / LINK2) * 0.34;
+          var alpha = (1 - d2 / LINK2) * 0.15;
           ctx.strokeStyle = 'rgba(' + c + ',' + alpha.toFixed(3) + ')';
           ctx.beginPath();
           ctx.moveTo(a.x, a.y);
@@ -155,7 +156,7 @@
         var mx = a.x - mouse.x, my = a.y - mouse.y;
         var md2 = mx * mx + my * my;
         if (md2 < LINK2 * 2.4) {
-          var ma = (1 - md2 / (LINK2 * 2.4)) * 0.5;
+          var ma = (1 - md2 / (LINK2 * 2.4)) * 0.20;
           ctx.strokeStyle = 'rgba(' + c + ',' + ma.toFixed(3) + ')';
           ctx.beginPath();
           ctx.moveTo(a.x, a.y);
@@ -167,7 +168,7 @@
 
     for (i = 0; i < particles.length; i++) {
       var pt = particles[i];
-      var alpha = 0.22 + (pt.z - 0.55) * 0.28; // 越近越亮
+      var alpha = 0.10 + (pt.z - 0.55) * 0.16; // 越近越亮
       ctx.fillStyle = 'rgba(' + c + ',' + alpha.toFixed(3) + ')';
       if (pt.square) {
         ctx.save();

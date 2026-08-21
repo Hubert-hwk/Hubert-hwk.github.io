@@ -4,12 +4,19 @@
   <subtitle>记录 AI 工程、自动化与个人成长</subtitle>
   <link href="https://hubert-hwk.github.io/atom.xml" rel="self"/>
   <link href="https://hubert-hwk.github.io/"/>
-  <updated>2026-08-20T00:00:00.000Z</updated>
+  <updated>2026-08-22T00:00:00.000Z</updated>
   <id>https://hubert-hwk.github.io/</id>
   <author>
     <name>Hwk</name>
   </author>
   <generator uri="https://hexo.io/">Hexo</generator>
+  <entry>
+    <title>把数学、代码、对话和工具装进一个基模：后训练能力整合的四条路线</title>
+    <link href="https://hubert-hwk.github.io/2026/08/22/post-training-capability-integration/"/>
+    <id>https://hubert-hwk.github.io/2026/08/22/post-training-capability-integration/</id>
+    <published>2026-08-22T00:00:00.000Z</published><updated>2026-08-22T00:00:00.000Z</updated>
+    <summary type="html">当数学、代码、通用对话与工具调用都要装进同一个基模，工业后训练有哪些能力整合路线？从 Mixed RL、Cascade RL、参数合并到多教师 MOPD。</summary>
+  </entry>
   <entry>
     <title>我把 DeepSeek Harness 的日志变成了 Agent 的自诊断医生：loop-doctor 插件家族开源</title>
     <link href="https://hubert-hwk.github.io/2026/08/20/dsh-loop-doctor/"/>

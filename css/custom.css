@@ -99,6 +99,22 @@ body {
   }
 }
 
+/* 尊重系统的“减少动态效果”偏好，避免粒子和过渡影响可访问性。 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  #particle-canvas {
+    display: none;
+  }
+}
+
 /* ---------- 侧栏内部 ---------- */
 .navbar {
   padding-top: 3.2rem;
@@ -727,7 +743,168 @@ body.toc-open .post-toc-fab {
 
 /* ---------- 首页卡片微调 ---------- */
 .github-showcase {
+  position: relative;
+  overflow: hidden;
+  margin: 2.8rem 0 3.6rem;
+  padding: 3.4rem;
+  border: 1px solid #e1e8f2;
+  border-radius: 1.8rem;
+  background: rgba(255, 255, 255, 0.92);
   box-shadow: 0 1.4rem 3.4rem rgba(30, 41, 59, 0.07);
+  backdrop-filter: blur(1rem);
+}
+
+.github-showcase::before {
+  position: absolute;
+  top: -7rem;
+  right: -4rem;
+  width: 19rem;
+  height: 19rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(96, 165, 250, 0.18), rgba(96, 165, 250, 0));
+  content: "";
+  pointer-events: none;
+}
+
+.github-showcase__eyebrow,
+.featured-post__eyebrow {
+  margin: 0 0 0.8rem;
+  color: #2563eb;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.github-showcase h2 {
+  position: relative;
+  margin: 0;
+  color: #0f172a;
+  font-size: clamp(2.5rem, 3.2vw, 3.5rem);
+  line-height: 1.2;
+}
+
+.github-showcase__intro {
+  position: relative;
+  max-width: 72rem;
+  margin: 1.5rem 0 0;
+  color: #475569;
+  font-size: 1.55rem;
+  line-height: 1.85;
+}
+
+.github-showcase__meta {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 1.8rem;
+}
+
+.github-showcase__meta span,
+.github-project__stack {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.github-showcase__meta span {
+  padding: 0.6rem 1rem;
+  border: 1px solid #dbeafe;
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.github-showcase__grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.4rem;
+  margin: 2.5rem 0 1.9rem;
+}
+
+.github-project {
+  display: flex;
+  min-height: 20rem;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2.2rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 1.3rem;
+  background: #fff;
+  color: #475569;
+  text-decoration: none;
+  box-shadow: 0 0.8rem 1.8rem rgba(30, 41, 59, 0.04);
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.github-project:hover {
+  transform: translateY(-0.35rem);
+  border-color: #93c5fd;
+  box-shadow: 0 1.4rem 2.6rem rgba(37, 99, 235, 0.12);
+}
+
+.github-project h3 {
+  margin: 0;
+  color: #0f172a;
+  font-size: 2.2rem;
+  line-height: 1.25;
+}
+
+.github-project h3::after {
+  margin-left: 0.7rem;
+  color: #2563eb;
+  content: "↗";
+  font-size: 1.5rem;
+  vertical-align: 0.1em;
+}
+
+.github-project p {
+  margin: 1.1rem 0 2rem;
+  font-size: 1.4rem;
+  line-height: 1.75;
+}
+
+.github-project__stack {
+  width: fit-content;
+  max-width: 100%;
+  padding: 0.6rem 1rem;
+  background: #f1f5f9;
+  color: #475569;
+  line-height: 1.45;
+}
+
+.github-showcase__more {
+  position: relative;
+  color: #1d4ed8;
+  font-size: 1.4rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.github-showcase__more:hover {
+  color: #1e40af;
+  text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+  .github-showcase {
+    margin: 2rem 0 2.8rem;
+    padding: 2.4rem 2rem;
+    border-radius: 1.4rem;
+  }
+
+  .github-showcase__grid {
+    grid-template-columns: 1fr;
+    margin-top: 2rem;
+  }
+
+  .github-project {
+    min-height: 0;
+    padding: 1.9rem;
+  }
 }
 
 .articles .article-entry {
@@ -839,6 +1016,33 @@ body.darkmode .github-showcase {
   box-shadow: none;
 }
 
+body.darkmode .github-showcase h2,
+body.darkmode .github-project h3 {
+  color: #f1f5f9;
+}
+
+body.darkmode .github-showcase__intro,
+body.darkmode .github-project,
+body.darkmode .github-project__stack {
+  color: #cbd5e1;
+}
+
+body.darkmode .github-showcase__meta span {
+  border-color: #1e3a5f;
+  background: #10233f;
+  color: #93c5fd;
+}
+
+body.darkmode .github-project {
+  border-color: #26364d;
+  background: #172033;
+  box-shadow: none;
+}
+
+body.darkmode .github-project__stack {
+  background: #243247;
+}
+
 body.darkmode .post-hero {
   background: linear-gradient(135deg, #14213d 0%, #111a2c 100%);
   border-color: #1e293b;
@@ -933,6 +1137,9 @@ body.darkmode .post-toc li.lvl-2 > a {
 body.darkmode .post-toc__close {
   color: #64748b;
 }
+
+/* 后训练能力整合文章 */
+.post-visual{margin:0 0 2.6rem}.post-visual img{border-radius:1.2rem;box-shadow:0 1.4rem 3.6rem rgba(15,23,42,.18)}.post-visual figcaption,.post-diagram figcaption{margin-top:.8rem;color:#64748b;text-align:center;font-size:1.3rem}.post-callout{margin:2rem 0;padding:1.5rem 1.8rem;border-left:.4rem solid #6d28d9;border-radius:.8rem;background:#f5f3ff;color:#312e81}.integration-map{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin:2rem 0}.integration-map>div{padding:1.2rem;border:1px solid #dbe4f0;border-radius:.8rem;background:#fff}.integration-map b,.integration-map span{display:block}.integration-map span{margin-top:.4rem;color:#64748b;font-size:1.25rem;line-height:1.5}.integration-map__accent{border-color:#8b5cf6!important;background:#faf5ff!important}.post-diagram{padding:1.8rem;margin:2.2rem 0;border:1px solid #dbe4f0;border-radius:1.2rem;background:linear-gradient(135deg,#f8fbff,#f5f3ff)}.diagram-row{display:flex;align-items:center;justify-content:center;gap:.8rem;flex-wrap:wrap;text-align:center}.diagram-row span,.diagram-row b,.diagram-row strong{padding:1rem;border-radius:.7rem;background:#fff;box-shadow:0 .2rem .8rem rgba(15,23,42,.08)}.diagram-row strong{background:#ede9fe;color:#4c1d95}.diagram-row i{font-style:normal;font-size:2rem;color:#7c3aed}.table-scroll{margin:1.8rem 0;overflow-x:auto}.table-scroll table{min-width:680px;border-collapse:collapse}.table-scroll th{background:#312e81;color:#fff}.table-scroll th,.table-scroll td{padding:1rem;border:1px solid #dbe4f0;text-align:left;vertical-align:top}.table-scroll tr:nth-child(even){background:#fafaff}.interview{margin:2rem 0;padding:1.4rem 1.7rem;border-radius:1rem;background:#eff6ff;border:1px solid #bfdbfe}.interview p{margin:.4rem 0}.post-references{font-size:1.35rem;word-break:break-word}@media(max-width:899px){.integration-map{grid-template-columns:repeat(2,1fr)}}body.darkmode .post-callout{background:#2e1065;color:#ede9fe}body.darkmode .integration-map>div,body.darkmode .post-diagram{background:#172033;border-color:#334155}body.darkmode .integration-map span,body.darkmode .post-visual figcaption,body.darkmode .post-diagram figcaption{color:#94a3b8}body.darkmode .diagram-row span,body.darkmode .diagram-row b{background:#1e293b}body.darkmode .interview{background:#172554;border-color:#1d4ed8}
 
 body.darkmode .featured-post__body h2 {
   color: #f1f5f9;

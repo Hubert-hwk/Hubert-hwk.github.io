@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>把数学、代码、对话和工具装进一个基模：后训练能力整合的四条路线</title>
+    <url>/2026/08/22/post-training-capability-integration/</url>
+    <content><![CDATA[<p>单项能力可以各自训强；难的是让数学、代码、通用对话与工具调用住进同一个模型后，仍然不互相挤掉。</p><h2>四条能力整合路线</h2><p>Mixed RL 在同一 batch 内混合多领域 rollout；Cascade RL 按领域顺序训练；Model Merging 在权重空间拼接专家；MOPD 先独立训练领域 RL 专家，再让学生在自身轨迹上接受按任务路由的 token 级教师监督。</p><h2>工程取舍</h2><p>Mixed RL 容易产生梯度冲突；Cascade RL 有遗忘和顺序敏感问题；参数合并便宜但会有权重干扰；MOPD 能让专家并行生产，但需要多教师推理与稳定的同源初始化。</p>]]></content>
+  </entry>
+  <entry>
     <title>我把 DeepSeek Harness 的日志变成了 Agent 的自诊断医生：loop-doctor 插件家族开源</title>
     <url>/2026/08/20/dsh-loop-doctor/</url>
     <content><![CDATA[<p>DeepSeek Harness 把每次运行事实写进 SessionEvent 日志，却没人读。loop-doctor 让 harness 读自己的日志做自诊断：确定性 detour 检测、回放验证的建议、人审后的修复沉淀，140 个测试全绿，已开源。</p>
